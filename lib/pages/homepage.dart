@@ -95,35 +95,58 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: backgroundColor,
-        floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
-        body: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                border: const Border(bottom: BorderSide(color: Color.fromARGB(255, 86, 77, 77)))
-              ),
-              child: const Text(
-                "GrowBit",
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
+      backgroundColor: backgroundColor,
+      floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
+      body: Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.2,
+            width: double.infinity,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [backgroundColor, Colors.purple],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: const [0.5, 0.95],
                 ),
-              ),
+                border: const Border(
+                    bottom:
+                        BorderSide(color: Color.fromARGB(255, 86, 77, 77)))),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "GrowBit",
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                Text(
+                  "Build your Habits",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w200,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            MonthlySummary(
-                datasets: db.heatMapDataSet,
-                startdate: _myBox.get("START_DATE")),
-            ListView.builder(
+          ),
+          const SizedBox(height: 20),
+          MonthlySummary(
+              datasets: db.heatMapDataSet, startdate: _myBox.get("START_DATE")),
+          Expanded(
+            child: ListView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                //physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return HabitTile(
                     habitName: db.todaysHabitList[index][0],
@@ -136,8 +159,9 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 itemCount: db.todaysHabitList.length),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -15,6 +15,8 @@ class MonthlySummary extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
+        height: MediaQuery.of(context).size.height * 0.3,
+        width: double.infinity,
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(20),
@@ -22,33 +24,36 @@ class MonthlySummary extends StatelessWidget {
               color: Colors.white,
             )
           ),
-          padding: const EdgeInsets.only(top: 25, bottom: 25),
-          child: HeatMap(
-            startDate: createDateTimeObject(startdate),
-            endDate: DateTime.now(),
-            datasets: datasets,
-            colorMode: ColorMode.color,
-            defaultColor: const Color.fromARGB(255, 58, 52, 52),
-            textColor: Colors.white,
-            showText: false,
-            scrollable: true,
-            size: 15,
-            colorsets: {
-              1: color1,
-              2: color2,
-              3: color3,
-              4: color4,
-              5: color5,
-              6: color6,
-              7: color7,
-              8: color8,
-              9: color9,
-              10: color10,
-            },
-            onClick: (value) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(value.toString())));
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: HeatMap(
+              startDate: createDateTimeObject(startdate),
+              endDate: DateTime.now(),
+              datasets: datasets,
+              colorMode: ColorMode.color,
+              defaultColor: const Color.fromARGB(255, 58, 52, 52),
+              textColor: Colors.white,
+              showText: false,
+              scrollable: true,
+              showColorTip: false,
+              size: 15,
+              colorsets: {
+                1: color1,
+                2: color2,
+                3: color3,
+                4: color4,
+                5: color5,
+                6: color6,
+                7: color7,
+                8: color8,
+                9: color9,
+                10: color10,
+              },
+              onClick: (value) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(value.toString())));
+              },
+            ),
           )),
     );
   }
