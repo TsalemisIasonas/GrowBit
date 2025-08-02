@@ -3,6 +3,7 @@ import 'package:habit_tracker/components/habit_tile.dart';
 import 'package:habit_tracker/components/month_summary.dart';
 import 'package:habit_tracker/components/my_fab.dart';
 import 'package:habit_tracker/components/my_alert_box.dart';
+import 'package:habit_tracker/components/progress_graph.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:habit_tracker/constants/colors.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -110,46 +111,50 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                border: const Border(
-                  bottom: BorderSide(
-                    color: Color.fromARGB(255, 86, 77, 77),
-                  ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: backgroundColor,
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "GrowBit",
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                     Row(
+                      children: [
+                            const Text(
+                              "GrowBit",
+                              style: TextStyle(
+                                fontSize: 45,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                                color: Colors.white, // The fill color
+                              ),
+                            ),
+                            SizedBox(width: MediaQuery.of(context).size.width*0.2),
+                            ProgressGraph(db: db)
+                      ],
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                  const Center(
-                    child: Text(
-                      "Build your Habits",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w200,
-                        letterSpacing: 1.2,
+
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.025),
+                    const Center(
+                      child: Text(
+                        "Build your Habits",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 2.8,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            
             const SizedBox(height: 20),
             MonthlySummary(
                 datasets: db.heatMapDataSet,
@@ -174,13 +179,11 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: ClipRRect(
-        child: BottomAppBar(
-          height: 55,
-          shape: const CircularNotchedRectangle(),
-          color: Colors.white
-        ),
-      ),
+      bottomNavigationBar: const BottomAppBar(
+            height: 45,
+            shape: CircularNotchedRectangle(),
+            color: Colors.white),
+      
     );
   }
 }
