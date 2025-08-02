@@ -4,6 +4,7 @@ import 'package:habit_tracker/components/month_summary.dart';
 import 'package:habit_tracker/components/my_fab.dart';
 import 'package:habit_tracker/components/my_alert_box.dart';
 import 'package:habit_tracker/data/habit_database.dart';
+import 'package:habit_tracker/constants/colors.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -94,10 +95,29 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: backgroundColor,
         floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
-        body: ListView(
+        body: Column(
           children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                border: const Border(bottom: BorderSide(color: Color.fromARGB(255, 86, 77, 77)))
+              ),
+              child: const Text(
+                "GrowBit",
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             MonthlySummary(
                 datasets: db.heatMapDataSet,
                 startdate: _myBox.get("START_DATE")),

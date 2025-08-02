@@ -12,34 +12,44 @@ class MonthlySummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.only(top: 25, bottom: 25),
-        child: HeatMap(
-          startDate: createDateTimeObject(startdate),
-          endDate: DateTime.now(),
-          datasets: datasets,
-          colorMode: ColorMode.color,
-          defaultColor: Colors.grey[200],
-          textColor: Colors.white,
-          showText: true,
-          scrollable: true,
-          size: 30,
-          colorsets: {
-            1: color1,
-            2: color2,
-            3: color3,
-            4: color4,
-            5: color5,
-            6: color6,
-            7: color7,
-            8: color8,
-            9: color9,
-            10: color10,
-          },
-          onClick: (value) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(value.toString())));
-          },
-        ));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.white,
+            )
+          ),
+          padding: const EdgeInsets.only(top: 25, bottom: 25),
+          child: HeatMap(
+            startDate: createDateTimeObject(startdate),
+            endDate: DateTime.now(),
+            datasets: datasets,
+            colorMode: ColorMode.color,
+            defaultColor: const Color.fromARGB(255, 58, 52, 52),
+            textColor: Colors.white,
+            showText: false,
+            scrollable: true,
+            size: 15,
+            colorsets: {
+              1: color1,
+              2: color2,
+              3: color3,
+              4: color4,
+              5: color5,
+              6: color6,
+              7: color7,
+              8: color8,
+              9: color9,
+              10: color10,
+            },
+            onClick: (value) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(value.toString())));
+            },
+          )),
+    );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyAlertBox extends StatelessWidget {
 
-  final controller;
+  final TextEditingController controller;
   final VoidCallback onSave;
   final VoidCallback onCancel;
 

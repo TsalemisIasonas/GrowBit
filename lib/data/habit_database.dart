@@ -15,7 +15,7 @@ class HabitDatabase {
       ["Read", false],
     ];
 
-    _myBox.put("START_DATE", todaysDateFormatted());
+    _myBox.put("START_DATE", startDateFormatted());
   }
 
   // load data if it already exists

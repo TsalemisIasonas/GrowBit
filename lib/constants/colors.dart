@@ -10,3 +10,5 @@ Color color7 = const Color.fromARGB(150, 2, 179, 8);
 Color color8 = const Color.fromARGB(180, 2, 179, 8);
 Color color9 = const Color.fromARGB(220, 2, 179, 8);
 Color color10 = const Color.fromARGB(255, 2, 179, 8);
+
+Color backgroundColor = const Color.fromARGB(255, 24, 24, 24);
