@@ -12,7 +12,7 @@ class ProgressGraph extends StatelessWidget {
     
   @override
   Widget build(BuildContext context) {
-    int completed = db.todaysHabitList.where((task) => task[1] = true).length;
+    int completed = db.todaysHabitList.where((task) => task[1] == true).length;
     int remaining = db.todaysHabitList.length - completed;
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
@@ -23,10 +23,10 @@ class ProgressGraph extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Text('${completed.toString()} / ${db.todaysHabitList.length.toString()}', 
-              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w200)),
+              style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700)),
               PieChart(
                 PieChartData(
-                  startDegreeOffset: 135,
+                  startDegreeOffset: 150,
                   sectionsSpace: 0,
                   centerSpaceRadius: 20,
                   sections: [

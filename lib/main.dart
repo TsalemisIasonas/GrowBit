@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/homepage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+// TODO : THE PROGRESS GRAPH CAUSES THE ISSUE WITH THE CHECKBOXES, FIX THAT
+
 void main() async{
 
   // initialize hive

@@ -5,6 +5,7 @@ import 'package:habit_tracker/components/my_fab.dart';
 import 'package:habit_tracker/components/my_alert_box.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:habit_tracker/constants/colors.dart';
+import 'package:habit_tracker/components/progress_graph.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.purple],
+            colors: [Color.fromARGB(255, 58, 68, 183), Colors.blue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.2, 0.95],
@@ -110,46 +111,61 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Colors.black,
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
                   border: Border(
-                      bottom:
-                          BorderSide(color: Color.fromARGB(255, 86, 77, 77)))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "GrowBit",
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
+                    bottom: BorderSide(
+                      color: Color.fromARGB(255, 86, 77, 77),
                     ),
                   ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                  const Center(
-                    child: Text(
-                      "Build your Habits",
-                      textAlign: TextAlign.center,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(32),
+                    bottomLeft: Radius.circular(32)
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+                  children: [
+                    const Text(
+                      "GrowBit",
                       style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w200,
+                        fontSize: 40,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.2,
+                    ),
+                    ProgressGraph(db: db),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                    const Center(
+                      child: Text(
+                        "Build your Habits",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w200,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             MonthlySummary(
-                datasets: db.heatMapDataSet, startdate: _myBox.get("START_DATE")),
+                datasets: db.heatMapDataSet,
+                startdate: _myBox.get("START_DATE")),
             Expanded(
               child: ListView.builder(
                   itemBuilder: (context, index) {
@@ -169,9 +185,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: const BottomAppBar(
-            height: 45,
-            shape: CircularNotchedRectangle(),
-            color: Colors.white),
+          height: 45, shape: CircularNotchedRectangle(), color: Colors.white),
     );
   }
 }
