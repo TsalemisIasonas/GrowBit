@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: backgroundColor,
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
       floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
+          FloatingActionButtonLocation.miniCenterDocked,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -172,6 +172,13 @@ class _HomePageState extends State<HomePage> {
                   itemCount: db.todaysHabitList.length),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: ClipRRect(
+        child: BottomAppBar(
+          height: 55,
+          shape: const CircularNotchedRectangle(),
+          color: Colors.white
         ),
       ),
     );
