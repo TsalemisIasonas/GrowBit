@@ -3,7 +3,6 @@ import 'package:habit_tracker/components/habit_tile.dart';
 import 'package:habit_tracker/components/month_summary.dart';
 import 'package:habit_tracker/components/my_fab.dart';
 import 'package:habit_tracker/components/my_alert_box.dart';
-import 'package:habit_tracker/components/progress_graph.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:habit_tracker/constants/colors.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -16,27 +15,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HabitDatabase db = HabitDatabase();
+  final HabitDatabase db = HabitDatabase();
   final _myBox = Hive.box("Habit_Database");
 
   @override
   void initState() {
     if (_myBox.get("CURRENT_HABIT_LIST") == null) {
       db.createDefaultData();
+      db.updateDatabase();
     } else {
       db.loadData();
     }
-    db.updateDatabase();
     super.initState();
   }
 
   void checkBoxTapped(bool? value, int index) {
     setState(() {
-      db.todaysHabitList[index][1] =
-          value; // update the state of habitCompleted
+      db.todaysHabitList[index][1] = value;
     });
     db.updateDatabase();
-  } // checkbox was tapped
+  }
 
   final _newHabitNameController = TextEditingController();
   void createNewHabit() {
@@ -49,14 +47,14 @@ class _HomePageState extends State<HomePage> {
             onCancel: cancelDialogBox);
       },
     );
-  } // create a new habit
+  }
 
   void saveNewHabit() {
     setState(() {
       db.todaysHabitList.add([_newHabitNameController.text, false]);
     });
     _newHabitNameController.clear();
-    Navigator.of(context).pop(); // close the dialog
+    Navigator.of(context).pop();
     db.updateDatabase();
   }
 
@@ -66,6 +64,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   openHabitSettings(int index) {
+    _newHabitNameController.text = db.todaysHabitList[index][0];
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -81,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       db.todaysHabitList[index][0] = _newHabitNameController.text;
       _newHabitNameController.clear();
-      Navigator.of(context).pop(); // close the dialog
+      Navigator.of(context).pop();
     });
     db.updateDatabase();
   }
@@ -111,61 +110,48 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.black,
+                  border: Border(
+                      bottom:
+                          BorderSide(color: Color.fromARGB(255, 86, 77, 77)))),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "GrowBit",
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                       Row(
-                        children: [
-                              const Text(
-                                "GrowBit",
-                                style: TextStyle(
-                                  fontSize: 45,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
-                                  color: Colors.white, // The fill color
-                                ),
-                              ),
-                              SizedBox(width: MediaQuery.of(context).size.width*0.2),
-                              ProgressGraph(db: db)
-                        ],
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  const Center(
+                    child: Text(
+                      "Build your Habits",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w200,
+                        letterSpacing: 1.2,
                       ),
-                
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05),
-                      const Center(
-                        child: Text(
-                          "Build your Habits",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 2.8,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            
+            ),
             const SizedBox(height: 20),
             MonthlySummary(
-                datasets: db.heatMapDataSet,
-                startdate: _myBox.get("START_DATE")),
+                datasets: db.heatMapDataSet, startdate: _myBox.get("START_DATE")),
             Expanded(
               child: ListView.builder(
-                  shrinkWrap: true,
-                  //physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return HabitTile(
                       habitName: db.todaysHabitList[index][0],
@@ -186,7 +172,6 @@ class _HomePageState extends State<HomePage> {
             height: 45,
             shape: CircularNotchedRectangle(),
             color: Colors.white),
-      
     );
   }
 }
