@@ -99,68 +99,80 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterFloat,
-      body: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.2,
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [backgroundColor, Colors.purple],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: const [0.5, 0.95],
-                ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.purple],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.2, 0.95],
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: backgroundColor,
                 border: const Border(
-                    bottom:
-                        BorderSide(color: Color.fromARGB(255, 86, 77, 77)))),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "GrowBit",
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
+                  bottom: BorderSide(
+                    color: Color.fromARGB(255, 86, 77, 77),
                   ),
                 ),
-                Text(
-                  "Build your Habits",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w200,
-                    letterSpacing: 1.2,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "GrowBit",
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.025),
+                  const Center(
+                    child: Text(
+                      "Build your Habits",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w200,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          MonthlySummary(
-              datasets: db.heatMapDataSet, startdate: _myBox.get("START_DATE")),
-          Expanded(
-            child: ListView.builder(
-                shrinkWrap: true,
-                //physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return HabitTile(
-                    habitName: db.todaysHabitList[index][0],
-                    habitCompleted: db.todaysHabitList[index][1],
-                    onChanged: (value) => checkBoxTapped(value, index),
-                    settingsTapped: ((context) {
-                      openHabitSettings(index);
-                    }),
-                    deleteTapped: (context) => deleteHabit(index),
-                  );
-                },
-                itemCount: db.todaysHabitList.length),
-          ),
-        ],
+            const SizedBox(height: 20),
+            MonthlySummary(
+                datasets: db.heatMapDataSet,
+                startdate: _myBox.get("START_DATE")),
+            Expanded(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  //physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return HabitTile(
+                      habitName: db.todaysHabitList[index][0],
+                      habitCompleted: db.todaysHabitList[index][1],
+                      onChanged: (value) => checkBoxTapped(value, index),
+                      settingsTapped: ((context) {
+                        openHabitSettings(index);
+                      }),
+                      deleteTapped: (context) => deleteHabit(index),
+                    );
+                  },
+                  itemCount: db.todaysHabitList.length),
+            ),
+          ],
+        ),
       ),
     );
   }
