@@ -45,7 +45,6 @@ class HabitTile extends StatelessWidget {
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     icon: Icons.delete,
-                    label: 'Delete',
                     borderRadius: BorderRadius.circular(0),
                   ),
                   SlidableAction(
@@ -53,7 +52,6 @@ class HabitTile extends StatelessWidget {
                     backgroundColor: Colors.grey.shade800,
                     foregroundColor: Colors.white,
                     icon: Icons.settings,
-                    label: 'Settings',
                     borderRadius: const BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
                   ),
                 ],
