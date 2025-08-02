@@ -111,47 +111,50 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.25,
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                     Row(
-                      children: [
-                            const Text(
-                              "GrowBit",
-                              style: TextStyle(
-                                fontSize: 45,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
-                                color: Colors.white, // The fill color
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                       Row(
+                        children: [
+                              const Text(
+                                "GrowBit",
+                                style: TextStyle(
+                                  fontSize: 45,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                  color: Colors.white, // The fill color
+                                ),
                               ),
-                            ),
-                            SizedBox(width: MediaQuery.of(context).size.width*0.2),
-                            ProgressGraph(db: db)
-                      ],
-                    ),
-
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.025),
-                    const Center(
-                      child: Text(
-                        "Build your Habits",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 2.8,
+                              SizedBox(width: MediaQuery.of(context).size.width*0.2),
+                              ProgressGraph(db: db)
+                        ],
+                      ),
+                
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05),
+                      const Center(
+                        child: Text(
+                          "Build your Habits",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 2.8,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             

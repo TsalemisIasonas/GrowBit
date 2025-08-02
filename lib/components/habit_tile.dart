@@ -23,46 +23,62 @@ class HabitTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, left: 15, right: 15),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const ScrollMotion(),
-          children: [
-            SlidableAction(
-              onPressed: deleteTapped,
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              label: 'Delete',
-              borderRadius: BorderRadius.circular(12),
-            ),
-            SlidableAction(
-              onPressed: settingsTapped,
-              backgroundColor: Colors.grey.shade800,
-              foregroundColor: Colors.white,
-              icon: Icons.settings,
-              label: 'Settings',
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ],
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: Colors.white),
         ),
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 38, 36, 36),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Checkbox(
-                value: habitCompleted,
-                onChanged: onChanged,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 38, 36, 36),
+              border: BoxBorder.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(12)
+            ),
+            child: Slidable(
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: deleteTapped,
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  SlidableAction(
+                    onPressed: settingsTapped,
+                    backgroundColor: Colors.grey.shade800,
+                    foregroundColor: Colors.white,
+                    icon: Icons.settings,
+                    label: 'Settings',
+                    borderRadius: const BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
+                  ),
+                ],
               ),
-              Text( habitName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                  )),
-            ],
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 38, 36, 36),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Checkbox(
+                      value: habitCompleted,
+                      onChanged: onChanged,
+                    ),
+                    Text( habitName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                        )),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
