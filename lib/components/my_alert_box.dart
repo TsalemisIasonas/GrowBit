@@ -12,7 +12,7 @@ class MyAlertBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Habit", style: TextStyle(color: Colors.white),),
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.grey[800],
       content: TextField(
         controller: controller,
         style: const TextStyle(color: Colors.white),
@@ -23,15 +23,13 @@ class MyAlertBox extends StatelessWidget {
         ),
       ),
       actions: [
-        MaterialButton(
+        TextButton(
           onPressed: onSave,
-          color: Colors.black,
-          child: const Text("Save", style: TextStyle(color: Colors.white)),
+          child: const Text("Save", style: TextStyle(color: Colors.green)),
         ),
-        MaterialButton(
+        TextButton(
           onPressed: onCancel,
-          color: Colors.black,
-          child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+          child: const Text("Cancel", style: TextStyle(color: Colors.red)),
         )
       ],
     );

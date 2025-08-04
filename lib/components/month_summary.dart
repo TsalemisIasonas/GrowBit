@@ -25,7 +25,7 @@ class MonthlySummary extends StatelessWidget {
                 fontSize: 20),
           ),
         ),
-        SizedBox(height: 20,),
+        const SizedBox(height: 20,),
         Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -34,7 +34,7 @@ class MonthlySummary extends StatelessWidget {
               endDate: DateTime.now(),
               datasets: datasets,
               colorMode: ColorMode.color,
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               defaultColor: const Color.fromARGB(255, 201, 225, 202),
               textColor: Colors.white,
               showText: true,
