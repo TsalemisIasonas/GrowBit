@@ -17,8 +17,8 @@ class ProgressGraph extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: SizedBox(
-          width: 35,
-          height: 30,
+          width: 55,
+          height: 55,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -28,10 +28,10 @@ class ProgressGraph extends StatelessWidget {
                 PieChartData(
                   startDegreeOffset: 150,
                   sectionsSpace: 0,
-                  centerSpaceRadius: 20,
+                  centerSpaceRadius: 50,
                   sections: [
                     PieChartSectionData(
-                      color: Colors.deepPurple,
+                      color: Colors.blue,
                       value: completed.toDouble(),
                       showTitle: false,
                       radius: 10,

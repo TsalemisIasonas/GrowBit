@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/components/habit_tile.dart';
-import 'package:habit_tracker/components/month_summary.dart';
 import 'package:habit_tracker/components/my_fab.dart';
 import 'package:habit_tracker/components/my_alert_box.dart';
 import 'package:habit_tracker/data/habit_database.dart';
-import 'package:habit_tracker/constants/colors.dart';
-import 'package:habit_tracker/components/progress_graph.dart';
+import 'package:habit_tracker/constants/colors.dart'; // Ensure this file exists and defines 'backgroundColor'
+import 'package:habit_tracker/pages/homepage_body.dart';
+import 'package:habit_tracker/pages/my_progress_page.dart';
+import 'package:habit_tracker/pages/my_stats_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,18 +18,40 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final HabitDatabase db = HabitDatabase();
   final _myBox = Hive.box("Habit_Database");
+  
+  // FIX: This is now a state variable for the BottomNavigationBar.
+  int _selectedIndex = 0;
+
+  // FIX: The list of pages is now initialized at declaration.
+  // This is the most reliable way to ensure it is always ready.
+  late final List<Widget> _pages = [
+    HomepageBody(
+      db: db,
+      checkBoxTapped: checkBoxTapped,
+      openHabitSettings: openHabitSettings,
+      deleteHabit: deleteHabit,
+    ),
+    MyProgressPage(
+      db: db,
+      myBox: _myBox,
+    ),
+    const MyStatsPage(),
+  ];
 
   @override
   void initState() {
+    // Check if it's the first time running the app
     if (_myBox.get("CURRENT_HABIT_LIST") == null) {
       db.createDefaultData();
-      db.updateDatabase();
     } else {
       db.loadData();
     }
+    // Update the database to save any changes
+    db.updateDatabase();
     super.initState();
   }
 
+  // Handle a checkbox tap
   void checkBoxTapped(bool? value, int index) {
     setState(() {
       db.todaysHabitList[index][1] = value;
@@ -37,55 +59,66 @@ class _HomePageState extends State<HomePage> {
     db.updateDatabase();
   }
 
+  // Controller for the new habit text field
   final _newHabitNameController = TextEditingController();
+
+  // Show a dialog box to create a new habit
   void createNewHabit() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return MyAlertBox(
-            controller: _newHabitNameController,
-            onSave: saveNewHabit,
-            onCancel: cancelDialogBox);
+          controller: _newHabitNameController,
+          onSave: saveNewHabit,
+          onCancel: cancelDialogBox,
+        );
       },
     );
   }
 
+  // Save a new habit from the alert box
   void saveNewHabit() {
+    // Navigate away from the dialog before updating state
+    Navigator.of(context).pop();
     setState(() {
       db.todaysHabitList.add([_newHabitNameController.text, false]);
     });
     _newHabitNameController.clear();
-    Navigator.of(context).pop();
     db.updateDatabase();
   }
 
+  // Close the dialog box and clear the text field
   void cancelDialogBox() {
     _newHabitNameController.clear();
     Navigator.of(context).pop();
   }
 
-  openHabitSettings(int index) {
+  // Show a dialog to edit an existing habit
+  void openHabitSettings(int index) {
     _newHabitNameController.text = db.todaysHabitList[index][0];
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return MyAlertBox(
-            controller: _newHabitNameController,
-            onSave: () => saveExistingHabit(index),
-            onCancel: cancelDialogBox,
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return MyAlertBox(
+          controller: _newHabitNameController,
+          onSave: () => saveExistingHabit(index),
+          onCancel: cancelDialogBox,
+        );
+      },
+    );
   }
 
+  // Save the updated habit name
   void saveExistingHabit(int index) {
+    Navigator.of(context).pop();
     setState(() {
       db.todaysHabitList[index][0] = _newHabitNameController.text;
-      _newHabitNameController.clear();
-      Navigator.of(context).pop();
     });
+    _newHabitNameController.clear();
     db.updateDatabase();
   }
 
+  // Delete a habit from the list
   void deleteHabit(int index) {
     setState(() {
       db.todaysHabitList.removeAt(index);
@@ -93,99 +126,52 @@ class _HomePageState extends State<HomePage> {
     db.updateDatabase();
   }
 
+  // The method to handle the BottomNavigationBar tap
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Assuming 'backgroundColor' is defined in 'constants/colors.dart'.
+    // If not, you can define it here, e.g., final backgroundColor = Colors.grey[200];
     return Scaffold(
       backgroundColor: backgroundColor,
       floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 58, 68, 183), Colors.blue],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.2, 0.95],
-          ),
-        ),
-        child: Column(
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        title: const Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Color.fromARGB(255, 86, 77, 77),
-                    ),
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(32),
-                    bottomLeft: Radius.circular(32)
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
-                  children: [
-                    const Text(
-                      "GrowBit",
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                    ),
-                    ProgressGraph(db: db),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.025),
-                    const Center(
-                      child: Text(
-                        "Build your Habits",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w200,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+            Icon(Icons.check_rounded, color: Colors.green),
+            SizedBox(width: 10),
+            Text(
+              "GrowBit",
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1.2,
               ),
-            ),
-            const SizedBox(height: 5),
-            MonthlySummary(
-                datasets: db.heatMapDataSet,
-                startdate: _myBox.get("START_DATE")),
-            Expanded(
-              child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return HabitTile(
-                      habitName: db.todaysHabitList[index][0],
-                      habitCompleted: db.todaysHabitList[index][1],
-                      onChanged: (value) => checkBoxTapped(value, index),
-                      settingsTapped: ((context) {
-                        openHabitSettings(index);
-                      }),
-                      deleteTapped: (context) => deleteHabit(index),
-                    );
-                  },
-                  itemCount: db.todaysHabitList.length),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: const BottomAppBar(
-          height: 45, shape: CircularNotchedRectangle(), color: Colors.white),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'Progress'),
+          BottomNavigationBarItem(icon: Icon(Icons.pie_chart), label: 'Stats'),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

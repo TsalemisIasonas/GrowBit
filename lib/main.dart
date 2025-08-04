@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker/pages/homepage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-// TODO : THE PROGRESS GRAPH CAUSES THE ISSUE WITH THE CHECKBOXES, FIX THAT
-
-void main() async{
-
+void main() async {
   // initialize hive
   await Hive.initFlutter();
 
@@ -24,10 +21,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: const HomePage(),
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 78, 171,
+              247), 
+        ),
       ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
-

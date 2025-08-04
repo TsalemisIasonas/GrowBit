@@ -9,9 +9,9 @@ class MyFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: onPressed,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue,
       shape: const CircleBorder(),
-      child: const Icon(Icons.add),
+      child: const Icon(Icons.add, size: 30)
       
     );
   }

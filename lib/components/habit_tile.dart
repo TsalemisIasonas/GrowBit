@@ -4,9 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class HabitTile extends StatelessWidget {
   final String habitName;
   final bool habitCompleted;
-
   final Function(bool?)? onChanged;
-
   final Function(BuildContext)? settingsTapped;
   final Function(BuildContext)? deleteTapped;
 
@@ -21,65 +19,62 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4.0, bottom: 4.0, left: 15, right: 15),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: Colors.white),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
+    return Column(
+      children: [
+        Slidable(
+          endActionPane: ActionPane(
+            motion: const ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: deleteTapped,
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                // FIX: No rounded border on delete action to make it a clean rectangle.
+                borderRadius: BorderRadius.zero,
+              ),
+              SlidableAction(
+                onPressed: settingsTapped,
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                foregroundColor: Colors.blue,
+                icon: Icons.settings,
+                // FIX: No rounded border here either.
+                borderRadius: BorderRadius.zero,
+              ),
+            ],
+          ),
           child: Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 38, 36, 36),
-              border: BoxBorder.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(12)
+            // FIX: Padding inside the container for spacing around the content.
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            // FIX: No decoration, no border, no radius.
+            decoration: const BoxDecoration(
+              color: Colors.white,
             ),
-            child: Slidable(
-              endActionPane: ActionPane(
-                motion: const ScrollMotion(),
-                children: [
-                  SlidableAction(
-                    onPressed: deleteTapped,
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    borderRadius: BorderRadius.circular(0),
+            child: Row(
+              children: [
+                Icon(Icons.task_outlined, size: 20, color: Colors.blue),
+                const SizedBox(width: 16),
+                Text(
+                  habitName,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    letterSpacing: 1.2,
                   ),
-                  SlidableAction(
-                    onPressed: settingsTapped,
-                    backgroundColor: Colors.grey.shade800,
-                    foregroundColor: Colors.white,
-                    icon: Icons.settings,
-                    borderRadius: const BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
-                  ),
-                ],
-              ),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 38, 36, 36),
-                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: habitCompleted,
-                      onChanged: onChanged,
-                    ),
-                    Text( habitName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          letterSpacing: 1.2,
-                        )),
-                  ],
+                const Spacer(),
+                Checkbox(
+                  value: habitCompleted,
+                  onChanged: onChanged,
                 ),
-              ),
+              ],
             ),
           ),
         ),
-      ),
+        // FIX: Add a Divider between each tile.
+        const Divider(height: 1, thickness: 1, color: Colors.black),
+      ],
     );
   }
 }
