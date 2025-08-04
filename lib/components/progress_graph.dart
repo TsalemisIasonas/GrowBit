@@ -37,7 +37,7 @@ class ProgressGraph extends StatelessWidget {
                       radius: 10,
                     ),
                     PieChartSectionData(
-                      color: Colors.grey.shade800,
+                      color: Color.fromARGB(255,203, 224, 246),
                       value: remaining.toDouble(),
                       showTitle: false,
                       radius: 10,

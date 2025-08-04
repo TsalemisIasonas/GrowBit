@@ -73,7 +73,7 @@ class HabitTile extends StatelessWidget {
           ),
         ),
         // FIX: Add a Divider between each tile.
-        const Divider(height: 1, thickness: 1, color: Colors.black),
+        const Divider(height: 1, thickness: 1, color: Colors.black12),
       ],
     );
   }

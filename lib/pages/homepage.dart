@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/components/my_fab.dart';
+//import 'package:habit_tracker/components/my_fab.dart';
 import 'package:habit_tracker/components/my_alert_box.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:habit_tracker/constants/colors.dart'; // Ensure this file exists and defines 'backgroundColor'
@@ -139,10 +139,11 @@ class _HomePageState extends State<HomePage> {
     // If not, you can define it here, e.g., final backgroundColor = Colors.grey[200];
     return Scaffold(
       backgroundColor: backgroundColor,
-      floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      //floatingActionButton: MyFloatingActionButton(onPressed: createNewHabit),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       appBar: AppBar(
         backgroundColor: backgroundColor,
+        actions: [IconButton(onPressed: createNewHabit, icon: Icon(Icons.add), color: Colors.blue,)],
         title: const Row(
           children: [
             Icon(Icons.check_rounded, color: Colors.green),

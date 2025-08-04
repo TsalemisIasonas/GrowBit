@@ -12,18 +12,21 @@ class MonthlySummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.3,
-        width: double.infinity,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white,
-            )
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 16.0),
+          child: Text(
+            "Progress",
+            style: TextStyle(
+                color: Colors.black, 
+                fontWeight: FontWeight.w400, 
+                fontSize: 20),
           ),
+        ),
+        SizedBox(height: 20,),
+        Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: HeatMap(
@@ -31,12 +34,13 @@ class MonthlySummary extends StatelessWidget {
               endDate: DateTime.now(),
               datasets: datasets,
               colorMode: ColorMode.color,
-              defaultColor: const Color.fromARGB(255, 58, 52, 52),
+              margin: EdgeInsets.all(5),
+              defaultColor: const Color.fromARGB(255, 201, 225, 202),
               textColor: Colors.white,
-              showText: false,
+              showText: true,
               scrollable: true,
               showColorTip: false,
-              size: 15,
+              size: 25,
               colorsets: {
                 1: color1,
                 2: color2,
@@ -50,11 +54,13 @@ class MonthlySummary extends StatelessWidget {
                 10: color10,
               },
               onClick: (value) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(value.toString())));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(value.toString())));
               },
             ),
-          )),
+          ),
+        ),
+      ],
     );
   }
 }

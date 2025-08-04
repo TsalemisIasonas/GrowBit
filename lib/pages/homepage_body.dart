@@ -4,7 +4,7 @@ import 'package:habit_tracker/components/progress_graph.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:intl/intl.dart';
 
-class HomepageBody extends StatelessWidget {
+class HomepageBody extends StatefulWidget {
   final HabitDatabase db;
   final Function checkBoxTapped;
   final Function openHabitSettings;
@@ -18,6 +18,11 @@ class HomepageBody extends StatelessWidget {
     required this.deleteHabit,
   });
 
+  @override
+  State<HomepageBody> createState() => _HomepageBodyState();
+}
+
+class _HomepageBodyState extends State<HomepageBody> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,31 +44,31 @@ class HomepageBody extends StatelessWidget {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
           ),
           const SizedBox(height: 50),
-          Center(child: ProgressGraph(db: db)),
+          Center(child: ProgressGraph(db: widget.db)),
           const SizedBox(height: 50),
           Expanded(
             child: Container(
               // FIX: This container now defines the single outer border.
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: ListView.builder(
-                // FIX: No padding, so the tiles touch the container's edge.
+                physics: const ClampingScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   return HabitTile(
-                    habitName: db.todaysHabitList[index][0],
-                    habitCompleted: db.todaysHabitList[index][1],
-                    onChanged: (value) => checkBoxTapped(value, index),
+                    habitName: widget.db.todaysHabitList[index][0],
+                    habitCompleted: widget.db.todaysHabitList[index][1],
+                    onChanged: (value) => widget.checkBoxTapped(value, index),
                     settingsTapped: ((context) {
-                      openHabitSettings(index);
+                      widget.openHabitSettings(index);
                     }),
-                    deleteTapped: (context) => deleteHabit(index),
+                    deleteTapped: (context) => widget.deleteHabit(index),
                   );
                 },
-                itemCount: db.todaysHabitList.length,
+                itemCount: widget.db.todaysHabitList.length,
               ),
             ),
           ),
