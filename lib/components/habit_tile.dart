@@ -45,7 +45,7 @@ class HabitTile extends StatelessWidget {
           ),
           child: Container(
             // FIX: Padding inside the container for spacing around the content.
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
             // FIX: No decoration, no border, no radius.
             decoration: const BoxDecoration(
               color: Colors.white70,

@@ -128,9 +128,9 @@ void checkBoxTapped(bool? value, int index) {
     ];
     return Scaffold(
       backgroundColor: backgroundColor,
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       appBar: AppBar(
         backgroundColor: backgroundColor,
+        shadowColor: Colors.black,
         actions: [IconButton(onPressed: createNewHabit, icon: const Icon(Icons.add), color: Colors.blue,)],
         title: const Row(
           children: [

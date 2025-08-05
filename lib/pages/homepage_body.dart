@@ -22,48 +22,64 @@ class HomepageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       // The main padding is now applied here
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.only(left: 5.0, right: 5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Home",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 2,
+          const Padding(
+            padding: EdgeInsets.only(left: 15.0),
+            child: Text(
+              "Home",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 2,
+              ),
             ),
           ),
-          Text(
-            DateFormat('EEEE, MMMM d').format(DateTime.now()),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Text(
+              DateFormat('EEEE, MMMM d').format(DateTime.now()),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 15.0, top: 15.0),
+            child: Text(
+              "Daily Progress",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            ),
           ),
           const SizedBox(height: 50),
           Center(child: ProgressGraph(db: db)),
           const SizedBox(height: 50),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  return HabitTile(
-                    habitName: db.todaysHabitList[index][0],
-                    habitCompleted: db.todaysHabitList[index][1],
-                    // Functions are now passed directly without a 'widget.' reference.
-                    onChanged: (value) => checkBoxTapped(value, index),
-                    settingsTapped: ((context) {
-                      openHabitSettings(index);
-                    }),
-                    deleteTapped: (context) => deleteHabit(index),
-                  );
-                },
-                itemCount: db.todaysHabitList.length,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return HabitTile(
+                      habitName: db.todaysHabitList[index][0],
+                      habitCompleted: db.todaysHabitList[index][1],
+                      // Functions are now passed directly without a 'widget.' reference.
+                      onChanged: (value) => checkBoxTapped(value, index),
+                      settingsTapped: ((context) {
+                        openHabitSettings(index);
+                      }),
+                      deleteTapped: (context) => deleteHabit(index),
+                    );
+                  },
+                  itemCount: db.todaysHabitList.length,
+                ),
               ),
             ),
           ),
