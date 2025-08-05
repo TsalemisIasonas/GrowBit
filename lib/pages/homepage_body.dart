@@ -20,9 +20,6 @@ class HomepageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inside your HomepageBody's build method
-// Add this line right at the beginning of the build method
-print("HomepageBody rebuilding. First habit completed status: ${db.todaysHabitList[0][1]}");
     return Padding(
       // The main padding is now applied here
       padding: const EdgeInsets.all(12.0),
