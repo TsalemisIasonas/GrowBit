@@ -1,20 +1,21 @@
 import 'package:habit_tracker/datetime/date_time.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:habit_tracker/constants/category_data.dart'; // Import your new categories file
 
 // reference our box
 final _myBox = Hive.box("Habit_Database");
 
 class HabitDatabase {
-  List todaysHabitList = [];
+  List<List<dynamic>> todaysHabitList = []; // Updated type for clarity
   Map<DateTime, int> heatMapDataSet = {};
 
   // create initial default data
   void createDefaultData() {
     todaysHabitList = [
-      ["Run", false],
-      ["Read", false],
+      // Habits now include a category string
+      ["Run", false, "health"],
+      ["Read", false, "mindfulness"],
     ];
-
     _myBox.put("START_DATE", startDateFormatted());
   }
 
@@ -22,7 +23,7 @@ class HabitDatabase {
   void loadData() {
     // if it's a new day, get habit list from database
     if (_myBox.get(todaysDateFormatted()) == null) {
-      todaysHabitList = _myBox.get("CURRENT_HABIT_LIST");
+      todaysHabitList = _myBox.get("CURRENT_HABIT_LIST")?.cast<List<dynamic>>() ?? [];
       // set all habit completed to false since it's a new day
       for (int i = 0; i < todaysHabitList.length; i++) {
         todaysHabitList[i][1] = false;
@@ -30,7 +31,7 @@ class HabitDatabase {
     }
     // if it's not a new day, load todays list
     else {
-      todaysHabitList = _myBox.get(todaysDateFormatted());
+      todaysHabitList = _myBox.get(todaysDateFormatted())?.cast<List<dynamic>>() ?? [];
     }
   }
 
@@ -83,14 +84,10 @@ class HabitDatabase {
         _myBox.get("PERCENTAGE_SUMMARY_$yyyymmdd") ?? "0.0",
       );
 
-      // split the datetime up like below so it doesn't worry about hours/mins/secs etc.
-
       // year
       int year = startDate.add(Duration(days: i)).year;
-
       // month
       int month = startDate.add(Duration(days: i)).month;
-
       // day
       int day = startDate.add(Duration(days: i)).day;
 
@@ -99,7 +96,52 @@ class HabitDatabase {
       };
 
       heatMapDataSet.addEntries(percentForEachDay.entries);
-      //print(heatMapDataSet);
     }
+  }
+
+  // Calculate the overall completion percentage and return it as a double
+  double getOverallCompletionPercentage() {
+    double totalPercentage = 0.0;
+    int dayCount = 0;
+
+    for (final key in _myBox.keys) {
+      if (key.startsWith("PERCENTAGE_SUMMARY_")) {
+        String? percentString = _myBox.get(key);
+        if (percentString != null) {
+          totalPercentage += double.tryParse(percentString) ?? 0.0;
+          dayCount++;
+        }
+      }
+    }
+    if (dayCount == 0) {
+      return 0.0;
+    }
+    return totalPercentage / dayCount;
+  }
+
+  // display the value as a string for UI text
+  String getOverallCompletion() {
+    double overallCompletion = getOverallCompletionPercentage() * 100;
+    return "${overallCompletion.toStringAsFixed(0)}%";
+  }
+  
+  // Calculate category completion counts for the radar chart
+  Map<HabitCategory, int> getCategoryCompletionData() {
+    final Map<HabitCategory, int> categoryCounts = {
+      for (var category in HabitCategory.values) category: 0,
+    };
+
+    // Get the universal habit list from the database
+    final List<List<dynamic>> currentHabitList = _myBox.get("CURRENT_HABIT_LIST")?.cast<List<dynamic>>() ?? [];
+
+    for (final habit in currentHabitList) {
+      final String categoryString = habit[2];
+      final HabitCategory category = HabitCategory.values.firstWhere(
+        (e) => e.toString().split('.').last == categoryString,
+        orElse: () => HabitCategory.other,
+      );
+      categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
+    }
+    return categoryCounts;
   }
 }

@@ -45,7 +45,8 @@ class HabitTile extends StatelessWidget {
           ),
           child: Container(
             // FIX: Padding inside the container for spacing around the content.
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 5.0),
             // FIX: No decoration, no border, no radius.
             decoration: const BoxDecoration(
               color: Colors.white70,
@@ -67,6 +68,11 @@ class HabitTile extends StatelessWidget {
                 Checkbox(
                   value: habitCompleted,
                   onChanged: onChanged,
+                  activeColor: Colors.blue,
+                  checkColor: Colors.white,
+                  side: const BorderSide(
+                      color: Color.fromARGB(255, 131, 129, 129),
+                      width: 1.5),
                 ),
               ],
             ),
