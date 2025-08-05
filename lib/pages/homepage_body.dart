@@ -33,7 +33,7 @@ class HomepageBody extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
-                letterSpacing: 2,
+                letterSpacing: 1.5,
               ),
             ),
           ),
@@ -45,10 +45,10 @@ class HomepageBody extends StatelessWidget {
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(left: 15.0, top: 15.0),
+            padding: EdgeInsets.only(left: 25.0, top: 15.0),
             child: Text(
               "Daily Progress",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(height: 50),

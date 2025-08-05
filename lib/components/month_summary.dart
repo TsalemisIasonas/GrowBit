@@ -16,19 +16,20 @@ class MonthlySummary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(left: 16.0),
+          padding: EdgeInsets.only(left: 15.0),
           child: Text(
             "Progress",
             style: TextStyle(
                 color: Colors.black, 
                 fontWeight: FontWeight.w400, 
-                fontSize: 20),
+                fontSize: 20,
+                letterSpacing: 1.5),
           ),
         ),
         const SizedBox(height: 20,),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Center(
             child: HeatMap(
               startDate: createDateTimeObject(startdate),
               endDate: DateTime.now(),
