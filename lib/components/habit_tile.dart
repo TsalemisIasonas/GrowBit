@@ -19,6 +19,7 @@ class HabitTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Building HabitTile for '$habitName'. Completed: $habitCompleted");
     return Column(
       children: [
         Slidable(

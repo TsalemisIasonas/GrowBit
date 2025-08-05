@@ -4,11 +4,11 @@ import 'package:habit_tracker/components/progress_graph.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:intl/intl.dart';
 
-class HomepageBody extends StatefulWidget {
+class HomepageBody extends StatelessWidget {
   final HabitDatabase db;
-  final Function checkBoxTapped;
-  final Function openHabitSettings;
-  final Function deleteHabit;
+  final Function(bool?, int) checkBoxTapped;
+  final Function(int) openHabitSettings;
+  final Function(int) deleteHabit;
 
   const HomepageBody({
     super.key,
@@ -19,15 +19,13 @@ class HomepageBody extends StatefulWidget {
   });
 
   @override
-  State<HomepageBody> createState() => _HomepageBodyState();
-}
-
-class _HomepageBodyState extends State<HomepageBody> {
-  @override
   Widget build(BuildContext context) {
+    // Inside your HomepageBody's build method
+// Add this line right at the beginning of the build method
+print("HomepageBody rebuilding. First habit completed status: ${db.todaysHabitList[0][1]}");
     return Padding(
       // The main padding is now applied here
-      padding: const EdgeInsets.all(12.0), 
+      padding: const EdgeInsets.all(12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -44,11 +42,10 @@ class _HomepageBodyState extends State<HomepageBody> {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
           ),
           const SizedBox(height: 50),
-          Center(child: ProgressGraph(db: widget.db)),
+          Center(child: ProgressGraph(db: db)),
           const SizedBox(height: 50),
           Expanded(
             child: Container(
-              // FIX: This container now defines the single outer border.
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Colors.black12),
@@ -59,16 +56,17 @@ class _HomepageBodyState extends State<HomepageBody> {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   return HabitTile(
-                    habitName: widget.db.todaysHabitList[index][0],
-                    habitCompleted: widget.db.todaysHabitList[index][1],
-                    onChanged: (value) => widget.checkBoxTapped(value, index),
+                    habitName: db.todaysHabitList[index][0],
+                    habitCompleted: db.todaysHabitList[index][1],
+                    // Functions are now passed directly without a 'widget.' reference.
+                    onChanged: (value) => checkBoxTapped(value, index),
                     settingsTapped: ((context) {
-                      widget.openHabitSettings(index);
+                      openHabitSettings(index);
                     }),
-                    deleteTapped: (context) => widget.deleteHabit(index),
+                    deleteTapped: (context) => deleteHabit(index),
                   );
                 },
-                itemCount: widget.db.todaysHabitList.length,
+                itemCount: db.todaysHabitList.length,
               ),
             ),
           ),
