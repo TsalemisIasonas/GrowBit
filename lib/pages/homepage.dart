@@ -17,21 +17,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HabitDatabase db = HabitDatabase();
-  final _myBox = Hive.box("Habit_Database");
-  
+  final _myBox = Hive.box("GrowBit_Database");  
   int _selectedIndex = 0;
 
 
-  @override
-  void initState() {
-    if (_myBox.get("CURRENT_HABIT_LIST") == null) {
-      db.createDefaultData();
-    } else {
-      db.loadData();
-    }
-    db.updateDatabase();
-    super.initState();
+@override
+void initState() {
+  // Check if this is the very first time running the app
+  if (_myBox.get("CURRENT_HABIT_LIST") == null) {
+    // This is the first time ever, create default data
+    db.createDefaultData();
   }
+  // Load the data, which will now find the default list
+  db.loadData();
+  super.initState();
+}
 
 // Handle a checkbox tap
 void checkBoxTapped(bool? value, int index) {
@@ -86,18 +86,22 @@ void saveNewHabit(String habitName, String selectedCategory) {
     Navigator.of(context).pop();
   }
 
-  void openHabitSettings(int index) {
-  _newHabitNameController.text = db.todaysHabitList[index][0];
+// Inside _HomePageState
+// Make sure to replace your existing openHabitSettings method with this one
+void openHabitSettings(int index) {
+  // Get the current habit to pre-populate the dialog
+  final currentHabit = db.todaysHabitList[index];
+  
+  _newHabitNameController.text = currentHabit[0];
 
   showDialog(
     context: context,
     builder: (context) {
       return MyAlertBox(
         controller: _newHabitNameController,
-        // FIX: Pass the existing habit's name and category to the dialog
-        initialHabitName: db.todaysHabitList[index][0],
-        initialCategory: db.todaysHabitList[index][2],
-        // FIX: The onSave callback now calls the new saveExistingHabit function
+        initialHabitName: currentHabit[0],
+        // FIX: Check if the habit has a category (length > 2) before passing it
+        initialCategory: currentHabit.length > 2 ? currentHabit[2] : 'other',
         onSave: (habitName, selectedCategory) {
           saveExistingHabit(index, habitName, selectedCategory);
         },
@@ -107,13 +111,22 @@ void saveNewHabit(String habitName, String selectedCategory) {
   );
 }
 
-// FIX: The method now accepts the new habit name AND the new category
+// And replace your existing saveExistingHabit method with this one
 void saveExistingHabit(int index, String newHabitName, String newCategory) {
   Navigator.of(context).pop();
   setState(() {
-    // FIX: Update both the name (index 0) and the category (index 2)
+    // FIX: Update the name (index 0).
     db.todaysHabitList[index][0] = newHabitName;
-    db.todaysHabitList[index][2] = newCategory;
+
+    // FIX: Update the category. This is safe because `newCategory` is always a valid string
+    // and `db.todaysHabitList[index]` is guaranteed to have at least 3 elements after the fix.
+    // However, it's safer to check the length if you're not sure.
+    if (db.todaysHabitList[index].length > 2) {
+      db.todaysHabitList[index][2] = newCategory;
+    } else {
+      // If the list was old, add the category at the end
+      db.todaysHabitList[index].add(newCategory);
+    }
   });
   _newHabitNameController.clear();
   db.updateDatabase();
@@ -152,11 +165,11 @@ void saveExistingHabit(int index, String newHabitName, String newCategory) {
       appBar: AppBar(
         backgroundColor: backgroundColor,
         shadowColor: Colors.black,
-        actions: [IconButton(onPressed: createNewHabit, icon: const Icon(Icons.add), color: Colors.blue,)],
+        actions: [IconButton(onPressed: createNewHabit, icon: const Icon(Icons.add, size: 35,), color: Colors.blue)],
         title: const Row(
           children: [
-            Icon(Icons.check_rounded, color: Color.fromARGB(255, 79, 243, 84)),
-            SizedBox(width: 10),
+            Icon(Icons.check_rounded, color: Color.fromARGB(255, 79, 243, 84), size: 35),
+            SizedBox(width: 5),
             Text(
               "GrowBit",
               style: TextStyle(

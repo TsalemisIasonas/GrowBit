@@ -4,7 +4,7 @@ String startDateFormatted() {
   var today = DateTime.now();
 
   // Subtract 2 months from today using the DateTime constructor
-  var twoMonthsAgo = DateTime(today.year, today.month - 1, today.day);
+  var twoMonthsAgo = DateTime(today.year, today.month - 2, today.day);
 
   // Format the new date to yyyymmdd string
   String year = twoMonthsAgo.year.toString();

@@ -27,36 +27,36 @@ class HomepageBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.only(left: 15.0),
+            padding: EdgeInsets.only(left: 20.0),
             child: Text(
               "Home",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 30,
                 fontWeight: FontWeight.w400,
                 letterSpacing: 1.5,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15.0),
+            padding: const EdgeInsets.only(left: 25.0),
             child: Text(
               DateFormat('EEEE, MMMM d').format(DateTime.now()),
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(left: 25.0, top: 15.0),
+            padding: EdgeInsets.only(left: 25.0, top: 25.0),
             child: Text(
               "Daily Progress",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 100),
           Center(child: ProgressGraph(db: db)),
-          const SizedBox(height: 50),
+          const SizedBox(height: 120),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,

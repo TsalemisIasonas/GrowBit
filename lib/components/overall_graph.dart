@@ -13,18 +13,18 @@ class OverallGraph extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: SizedBox(
-          width: 30,
-          height: 30,
+          width: 60,
+          height: 60,
           child: Stack(
             alignment: Alignment.center,
             children: [
               Text(db.getOverallCompletion(), 
-              style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500)),
+              style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500)),
               PieChart(
                 PieChartData(
                   startDegreeOffset: -90,
                   sectionsSpace: 0,
-                  centerSpaceRadius: 35,
+                  centerSpaceRadius: 60,
                   sections: [
                     PieChartSectionData(
                       color: Colors.blue,

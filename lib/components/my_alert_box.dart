@@ -36,9 +36,9 @@ class _MyAlertBoxState extends State<MyAlertBox> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blue[100],
       content: SizedBox(
-        height: 120,
+        height: MediaQuery.of(context).size.height * 0.2,
         child: Column(
           children: [
             TextField(
@@ -46,15 +46,16 @@ class _MyAlertBoxState extends State<MyAlertBox> {
               decoration: const InputDecoration(
                 hintText: "Enter a new habit",
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide.none,
                 ),
               ),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
+              iconEnabledColor: Colors.blue,
               value: _selectedCategory,
               decoration: const InputDecoration(labelText: 'Category'),
               items: HabitCategory.values.map((category) {
@@ -73,24 +74,23 @@ class _MyAlertBoxState extends State<MyAlertBox> {
         ),
       ),
       actions: [
-        MaterialButton(
+        TextButton(
+          onPressed: widget.onCancel,
+          child: const Text(
+            "Cancel",
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+        TextButton(
           onPressed: () {
             widget.onSave(widget.controller.text, _selectedCategory!);
           },
-          color: Colors.blue,
           child: const Text(
             "Save",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.green),
           ),
         ),
-        MaterialButton(
-          onPressed: widget.onCancel,
-          color: Colors.red,
-          child: const Text(
-            "Cancel",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+        
       ],
     );
   }

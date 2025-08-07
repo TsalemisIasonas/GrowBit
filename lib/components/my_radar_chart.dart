@@ -18,15 +18,15 @@ class MyRadarChart extends StatelessWidget {
 
     return Center(
       child: SizedBox(
-        width: 150,
-        height: 150,
+        width: 300,
+        height: 300,
         child: RadarChart(
           RadarChartData(
             dataSets: [
               RadarDataSet(
                 fillColor: Colors.blue.withOpacity(0.5),
                 borderColor: Colors.blue,
-                borderWidth: 2,
+                borderWidth: 1,
                 dataEntries: completionData.entries.map((entry) {
                   return RadarEntry(value: entry.value.toDouble());
                 }).toList(),

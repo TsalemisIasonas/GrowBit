@@ -53,14 +53,14 @@ class HabitTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.task_outlined, size: 20, color: Colors.blue),
+                Icon(Icons.task_outlined, size: 28, color: Colors.blue),
                 const SizedBox(width: 16),
                 Text(
                   habitName,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
                     letterSpacing: 1.2,
                   ),
                 ),
