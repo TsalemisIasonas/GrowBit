@@ -85,7 +85,7 @@ class _ProgressGraphState extends State<ProgressGraph> {
               ),
             ),
             PieChart(
-              swapAnimationDuration: const Duration(milliseconds: 200),
+              swapAnimationDuration: const Duration(milliseconds: 150),
               swapAnimationCurve: Curves.easeIn,
               PieChartData(
                 startDegreeOffset: 150,

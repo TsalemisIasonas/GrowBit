@@ -49,7 +49,7 @@ class MyStatsPage extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 20,
         ),
         Center(child: MyRadarChart(db: db))
       ],
