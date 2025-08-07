@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/components/habit_tile.dart';
 import 'package:habit_tracker/components/progress_graph.dart';
+//import 'package:habit_tracker/constants/colors.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:intl/intl.dart';
 
@@ -32,8 +33,8 @@ class HomepageBody extends StatelessWidget {
               "Home",
               style: TextStyle(
                 fontSize: 30,
-                fontWeight: FontWeight.w400,
-                letterSpacing: 1.5,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.8,
               ),
             ),
           ),
@@ -41,7 +42,7 @@ class HomepageBody extends StatelessWidget {
             padding: const EdgeInsets.only(left: 25.0),
             child: Text(
               DateFormat('EEEE, MMMM d').format(DateTime.now()),
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, fontStyle: FontStyle.italic),
             ),
           ),
           const Padding(
@@ -59,8 +60,8 @@ class HomepageBody extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black12),
+                  color: Color.fromARGB(179, 255, 245, 245),
+                  border: Border.all(color: Colors.black45),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ListView.builder(

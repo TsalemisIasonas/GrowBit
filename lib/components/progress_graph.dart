@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:habit_tracker/constants/colors.dart';
 import '../data/habit_database.dart';
 
 class ProgressGraph extends StatefulWidget {
@@ -49,14 +50,15 @@ class _ProgressGraphState extends State<ProgressGraph> {
     return [
       PieChartSectionData(
         //key: const ValueKey('completed'),
-        color: Colors.blue,
+        color: darkGreenColor,
         value: completed.toDouble(),
         showTitle: false,
         radius: 15,
       ),
       PieChartSectionData(
         //key: const ValueKey('remaining'),
-        color: const Color.fromARGB(255, 203, 224, 246),
+        color: //const Color.fromARGB(255, 203, 224, 246), 
+               mintColor ,
         value: remaining.toDouble(),
         showTitle: false,
         radius: 15,
@@ -83,7 +85,7 @@ class _ProgressGraphState extends State<ProgressGraph> {
               ),
             ),
             PieChart(
-              swapAnimationDuration: const Duration(seconds: 1),
+              swapAnimationDuration: const Duration(milliseconds: 200),
               swapAnimationCurve: Curves.easeIn,
               PieChartData(
                 startDegreeOffset: 150,

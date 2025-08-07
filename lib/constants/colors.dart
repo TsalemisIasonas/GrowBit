@@ -11,4 +11,7 @@ Color color8 = const Color.fromARGB(180, 2, 179, 8);
 Color color9 = const Color.fromARGB(220, 2, 179, 8);
 Color color10 = const Color.fromARGB(255, 2, 179, 8);
 
-Color backgroundColor = const Color.fromARGB(255, 255, 255, 255);
+//Color backgroundColor = const Color.fromARGB(255, 255, 255, 255);
+Color backgroundColor = const Color.fromARGB(255, 242, 239, 233);
+Color mintColor = const Color(0xFFA1D1B1);
+Color darkGreenColor = const Color.fromARGB(255, 74, 124, 96);

@@ -18,7 +18,7 @@ class MyStatsPage extends StatelessWidget {
               "Stats",
               style: TextStyle(
                 fontSize: 30,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 letterSpacing: 1.5,
               ),
             ),
@@ -27,7 +27,7 @@ class MyStatsPage extends StatelessWidget {
             padding: EdgeInsets.only(left: 30.0, top: 25.0),
             child: Text(
               "Overall Completion",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(height: 50),
@@ -36,7 +36,7 @@ class MyStatsPage extends StatelessWidget {
             padding: EdgeInsets.only(left: 30.0, top: 55.0),
             child: Text(
               "Activity by Category",
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
           ),
           const SizedBox(height: 10,),
