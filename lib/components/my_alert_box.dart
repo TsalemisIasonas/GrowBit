@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/constants/category_data.dart';
+import 'package:habit_tracker/constants/colors.dart';
 
 class MyAlertBox extends StatefulWidget {
   final VoidCallback onCancel;
@@ -30,21 +31,30 @@ class _MyAlertBoxState extends State<MyAlertBox> {
     super.initState();
     // FIX: Pre-populate the text field and selected category if initial values are provided
     widget.controller.text = widget.initialHabitName ?? "";
-    _selectedCategory = widget.initialCategory ?? HabitCategory.other.toString().split('.').last;
+    _selectedCategory = widget.initialCategory ??
+        HabitCategory.other.toString().split('.').last;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.blue[100],
+      title: const Text(
+        "My Habit",
+        style: TextStyle(
+            fontSize: 30.0, fontWeight: FontWeight.w400, color: Colors.white),
+      ),
+      backgroundColor: const Color.fromARGB(255, 52, 52, 52),
       content: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: MediaQuery.of(context).size.height * 0.3,
+        width: MediaQuery.of(context).size.width * 0.8,
         child: Column(
           children: [
             TextField(
               controller: widget.controller,
+              style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
                 hintText: "Enter a new habit",
+                hintStyle: TextStyle(color: Colors.white70),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
@@ -55,7 +65,7 @@ class _MyAlertBoxState extends State<MyAlertBox> {
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
-              iconEnabledColor: Colors.blue,
+              iconEnabledColor: darkGreenColor,
               value: _selectedCategory,
               decoration: const InputDecoration(labelText: 'Category'),
               items: HabitCategory.values.map((category) {
@@ -78,7 +88,7 @@ class _MyAlertBoxState extends State<MyAlertBox> {
           onPressed: widget.onCancel,
           child: const Text(
             "Cancel",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Color.fromARGB(255, 255, 17, 0)),
           ),
         ),
         TextButton(
@@ -87,10 +97,9 @@ class _MyAlertBoxState extends State<MyAlertBox> {
           },
           child: const Text(
             "Save",
-            style: TextStyle(color: Colors.green),
+            style: TextStyle(color: Color.fromARGB(255, 0, 249, 8)),
           ),
         ),
-        
       ],
     );
   }

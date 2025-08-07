@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:habit_tracker/constants/colors.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 import 'package:habit_tracker/constants/category_data.dart';
 
@@ -24,8 +25,8 @@ class MyRadarChart extends StatelessWidget {
           RadarChartData(
             dataSets: [
               RadarDataSet(
-                fillColor: Colors.blue.withOpacity(0.5),
-                borderColor: Colors.blue,
+                fillColor: mintColor.withOpacity(0.5),
+                borderColor: darkGreenColor,
                 borderWidth: 1,
                 dataEntries: completionData.entries.map((entry) {
                   return RadarEntry(value: entry.value.toDouble());

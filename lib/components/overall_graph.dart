@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/constants/colors.dart';
 import 'package:habit_tracker/data/habit_database.dart';
 
 class OverallGraph extends StatelessWidget {
@@ -27,13 +28,13 @@ class OverallGraph extends StatelessWidget {
                   centerSpaceRadius: 60,
                   sections: [
                     PieChartSectionData(
-                      color: Colors.blue,
+                      color: darkGreenColor,
                       value: completed.toDouble(),
                       showTitle: false,
                       radius: 10,
                     ),
                     PieChartSectionData(
-                      color: Color.fromARGB(255,203, 224, 246),
+                      color: mintColor,
                       value: remaining.toDouble(),
                       showTitle: false,
                       radius: 10,
