@@ -74,7 +74,8 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).pop();
     setState(() {
       // FIX: Add the selectedCategory to the new habit list
-      db.todaysHabitList.add([habitName, false, selectedCategory]);
+      IconData habitIconData = db.getIconForCategory(selectedCategory);
+      db.todaysHabitList.add([habitName, false, selectedCategory, habitIconData]);
     });
     _newHabitNameController.clear();
     db.updateDatabase();
@@ -112,24 +113,33 @@ class _HomePageState extends State<HomePage> {
 
 // And replace your existing saveExistingHabit method with this one
   void saveExistingHabit(int index, String newHabitName, String newCategory) {
-    Navigator.of(context).pop();
-    setState(() {
-      // FIX: Update the name (index 0).
-      db.todaysHabitList[index][0] = newHabitName;
+  Navigator.of(context).pop();
 
-      // FIX: Update the category. This is safe because `newCategory` is always a valid string
-      // and `db.todaysHabitList[index]` is guaranteed to have at least 3 elements after the fix.
-      // However, it's safer to check the length if you're not sure.
-      if (db.todaysHabitList[index].length > 2) {
-        db.todaysHabitList[index][2] = newCategory;
-      } else {
-        // If the list was old, add the category at the end
-        db.todaysHabitList[index].add(newCategory);
-      }
-    });
-    _newHabitNameController.clear();
-    db.updateDatabase();
-  }
+  // Get the new icon based on the category the user selected
+  final IconData newIconData = db.getIconForCategory(newCategory);
+
+  setState(() {
+    // 1. Update the name
+    db.todaysHabitList[index][0] = newHabitName;
+
+    // 2. Check if the list already has a category and icon field
+    if (db.todaysHabitList[index].length >= 4) {
+      db.todaysHabitList[index][2] = newCategory; // Update category at index 2
+      db.todaysHabitList[index][3] = newIconData; // Update icon at index 3
+    } else if (db.todaysHabitList[index].length == 3) {
+      // If it has a category but no icon, update category and add icon
+      db.todaysHabitList[index][2] = newCategory;
+      db.todaysHabitList[index].add(newIconData);
+    } else {
+      // If it's a very old habit (length < 3), add both category and icon
+      db.todaysHabitList[index].add(newCategory);
+      db.todaysHabitList[index].add(newIconData);
+    }
+  });
+
+  _newHabitNameController.clear();
+  db.updateDatabase();
+}
 
   void deleteHabit(int index) {
     setState(() {

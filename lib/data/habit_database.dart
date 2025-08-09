@@ -1,22 +1,34 @@
+import 'package:flutter/material.dart';
 import 'package:habit_tracker/datetime/date_time.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker/constants/category_data.dart';
 
 // reference our box
-final _myBox = Hive.box("Growbit_Database");
+final _myBox = Hive.box("GrowBit_Database");
 
 class HabitDatabase {
   List<List<dynamic>> todaysHabitList = [];
   Map<DateTime, int> heatMapDataSet = {};
 
+  // New helper method to get an icon based on a category string
+  IconData getIconForCategory(String categoryString) {
+    // Convert the string back to the enum value
+    final category = HabitCategory.values.firstWhere(
+      (e) => e.toString().split('.').last == categoryString,
+      orElse: () => HabitCategory.other,
+    );
+    // Return the icon from your categoryData map
+    return categoryData[category]!['icon'];
+  }
+
   // create initial default data
   void createDefaultData() {
     todaysHabitList = [
-      ["Run", false, "health"],
-      ["Read", false, "mindfulness"],
+      // Store IconData, not the Icon widget
+      ["Run", false, "health", getIconForCategory("health")],
+      ["Read", false, "mindfulness", getIconForCategory("mindfulness")],
     ];
     _myBox.put("START_DATE", startDateFormatted());
-    // FIX: Save the default list to the database
     _myBox.put("CURRENT_HABIT_LIST", todaysHabitList);
   }
 

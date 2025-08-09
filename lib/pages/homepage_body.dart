@@ -70,6 +70,8 @@ class HomepageBody extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return HabitTile(
                       habitName: db.todaysHabitList[index][0],
+                      habitCategory: db.todaysHabitList[index][2],
+                      habitIconData: db.todaysHabitList[index][3],
                       habitCompleted: db.todaysHabitList[index][1],
                       // Functions are now passed directly without a 'widget.' reference.
                       onChanged: (value) => checkBoxTapped(value, index),

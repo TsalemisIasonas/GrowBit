@@ -93,7 +93,7 @@ class _MyAlertBoxState extends State<MyAlertBox> {
         ),
         TextButton(
           onPressed: () {
-            widget.onSave(widget.controller.text, _selectedCategory!);
+            widget.onSave(widget.controller.text, _selectedCategory!,);
           },
           child: const Text(
             "Save",

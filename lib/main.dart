@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/adapters/icon_data_adapter.dart';
 import 'package:habit_tracker/pages/homepage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   // initialize hive
   await Hive.initFlutter();
+
+  Hive.registerAdapter(IconDataAdapter());
 
   //open a box
   await Hive.openBox("GrowBit_Database");

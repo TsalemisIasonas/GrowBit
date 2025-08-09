@@ -4,6 +4,8 @@ import 'package:habit_tracker/constants/colors.dart';
 
 class HabitTile extends StatelessWidget {
   final String habitName;
+  final String habitCategory;
+  final IconData habitIconData;
   final bool habitCompleted;
   final Function(bool?)? onChanged;
   final Function(BuildContext)? settingsTapped;
@@ -12,6 +14,8 @@ class HabitTile extends StatelessWidget {
   const HabitTile({
     super.key,
     required this.habitName,
+    required this.habitCategory,
+    required this.habitIconData,
     required this.habitCompleted,
     required this.onChanged,
     required this.settingsTapped,
@@ -56,16 +60,30 @@ class HabitTile extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.task_outlined, size: 28, color: darkGreenColor),
+                  Icon(habitIconData, size: 28, color: darkGreenColor),
                   const SizedBox(width: 16),
-                  Text(
-                    habitName[0].toUpperCase() + habitName.substring(1),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      letterSpacing: 1.2,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        habitName[0].toUpperCase() + habitName.substring(1),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      Text(
+                        habitCategory[0].toUpperCase() + habitCategory.substring(1),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                          fontSize: 12,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
                   ),
                   const Spacer(),
                   Checkbox(
