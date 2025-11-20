@@ -110,66 +110,72 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white10,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Today\'s habits',
-                    style: TextStyle(color: Colors.tealAccent, fontSize: 18),
-                  ),
-                  const SizedBox(height: 8),
-                  if (todayHabits.isEmpty)
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     const Text(
-                      'No habits scheduled for today.',
-                      style: TextStyle(color: Colors.white70),
-                    )
-                  else
-                    Column(
-                      children: todayHabits.map((r) {
-                        return ListTile(
-                          dense: true,
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(r['habitName']),
-                          subtitle: Text('${r['goalTitle']} · ${r['categoryTitle']}'),
-                          trailing: Wrap(
-                            spacing: 4,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.check_circle_outline, color: Colors.tealAccent),
-                                onPressed: () async {
-                                  await app.recordHabitCompletion(
-                                    r['categoryId'] as String,
-                                    r['goalId'] as String,
-                                    r['habitId'] as String,
-                                    note: 'Completed from dashboard',
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit, color: Colors.white70),
-                                onPressed: () {
-                                  _showEditHabitDialog(
-                                    context,
-                                    app,
-                                    r['categoryId'] as String,
-                                    r['goalId'] as String,
-                                    r['habitId'] as String,
-                                    r['habitName'] as String,
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                      'Today\'s habits',
+                      style: TextStyle(color: Colors.tealAccent, fontSize: 18),
                     ),
-                ],
+                    const SizedBox(height: 8),
+                    if (todayHabits.isEmpty)
+                      const Text(
+                        'No habits scheduled for today.',
+                        style: TextStyle(color: Colors.white70),
+                      )
+                    else
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: todayHabits.length,
+                          itemBuilder: (context, index) {
+                            final r = todayHabits[index];
+                            return ListTile(
+                              dense: true,
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(r['habitName']),
+                              subtitle: Text('${r['goalTitle']} · ${r['categoryTitle']}'),
+                              trailing: Wrap(
+                                spacing: 4,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.check_circle_outline, color: Colors.tealAccent),
+                                    onPressed: () async {
+                                      await app.recordHabitCompletion(
+                                        r['categoryId'] as String,
+                                        r['goalId'] as String,
+                                        r['habitId'] as String,
+                                        note: 'Completed from dashboard',
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, color: Colors.white70),
+                                    onPressed: () {
+                                      _showEditHabitDialog(
+                                        context,
+                                        app,
+                                        r['categoryId'] as String,
+                                        r['goalId'] as String,
+                                        r['habitId'] as String,
+                                        r['habitName'] as String,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],

@@ -22,7 +22,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
     int selectedPriority = 2;
     await showDialog(
         context: context,
-        builder: (_) => AlertDialog(
+        builder: (dialogContext) => StatefulBuilder(
+              builder: (ctx, setState) => AlertDialog(
               title: const Text('Add Goal'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -42,7 +43,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ],
                         onChanged: (v) {
                           if (v == null) return;
-                          selectedPriority = v;
+                          setState(() => selectedPriority = v);
                         },
                       ),
                     ],
@@ -50,18 +51,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ],
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Cancel')),
                 TextButton(
                     onPressed: () {
                       final v = controller.text.trim();
                       if (v.isNotEmpty) {
                         context.read<AppProvider>().addGoal(categoryId, v, priority: selectedPriority);
-                        Navigator.pop(context);
+                        Navigator.pop(dialogContext);
                       }
                     },
                     child: const Text('Add'))
               ],
-            ));
+            )));
   }
 
   Future<void> _showEditGoalDialog(BuildContext context, String categoryId, Goal goal) async {
@@ -113,111 +114,115 @@ class _CategoryScreenState extends State<CategoryScreen> {
         builder: (_) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
                 title: const Text('Add Habit'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(controller: controller, decoration: const InputDecoration(hintText: 'Habit name')),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        const Text('Time:'),
-                        const SizedBox(width: 8),
-                        TextButton(
-                          onPressed: () async {
-                            final t = await showTimePicker(context: context, initialTime: selectedTime);
-                            if (t != null) {
-                              setState(() => selectedTime = t);
-                            }
-                          },
-                          child: Text(selectedTime.format(context)),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownButton<String>(
-                      value: unit,
-                      items: const [
-                        DropdownMenuItem(value: 'daily', child: Text('Every day')),
-                        DropdownMenuItem(value: 'weekly', child: Text('Every week')),
-                        DropdownMenuItem(value: 'monthly', child: Text('Every month')),
-                        DropdownMenuItem(value: 'custom', child: Text('Custom')),
-                      ],
-                      onChanged: (v) {
-                        if (v == null) return;
-                        setState(() => unit = v);
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                    if (unit == 'weekly' || unit == 'monthly' || unit == 'custom') ...[
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(controller: controller, decoration: const InputDecoration(hintText: 'Habit name')),
+                      const SizedBox(height: 12),
                       Row(
                         children: [
-                          const Text('Every'),
+                          const Text('Time:'),
                           const SizedBox(width: 8),
-                          SizedBox(
-                            width: 56,
-                            child: TextField(
-                              decoration: const InputDecoration(isDense: true),
-                              keyboardType: TextInputType.number,
-                              controller: TextEditingController(text: interval.toString()),
-                              onChanged: (v) {
-                                final parsed = int.tryParse(v) ?? 1;
-                                setState(() => interval = parsed.clamp(1, 365));
-                              },
-                            ),
+                          TextButton(
+                            onPressed: () async {
+                              final t = await showTimePicker(context: context, initialTime: selectedTime);
+                              if (t != null) {
+                                setState(() => selectedTime = t);
+                              }
+                            },
+                            child: Text(selectedTime.format(context)),
                           ),
-                          const SizedBox(width: 8),
-                          Text(unit == 'weekly'
-                              ? 'week(s)'
-                              : unit == 'monthly'
-                                  ? 'month(s)'
-                                  : 'period(s)'),
                         ],
                       ),
-                    ],
-                    if (unit == 'weekly' || unit == 'custom') ...[
                       const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 4,
-                        children: weekdayLabels.entries.map((e) {
-                          final selected = selectedWeekdays.contains(e.key);
-                          return FilterChip(
-                            label: Text(e.value),
-                            selected: selected,
-                            onSelected: (val) {
-                              setState(() {
-                                if (val) {
-                                  selectedWeekdays.add(e.key);
-                                } else {
-                                  selectedWeekdays.remove(e.key);
-                                }
-                              });
-                            },
-                          );
-                        }).toList(),
+                      DropdownButton<String>(
+                        value: unit,
+                        items: const [
+                          DropdownMenuItem(value: 'daily', child: Text('Every day')),
+                          DropdownMenuItem(value: 'weekly', child: Text('Every week')),
+                          DropdownMenuItem(value: 'monthly', child: Text('Every month')),
+                          DropdownMenuItem(value: 'custom', child: Text('Custom')),
+                        ],
+                        onChanged: (v) {
+                          if (v == null) return;
+                          setState(() => unit = v);
+                        },
                       ),
+                      const SizedBox(height: 8),
+                      if (unit == 'weekly' || unit == 'monthly' || unit == 'custom') ...[
+                        Row(
+                          children: [
+                            const Text('Every'),
+                            const SizedBox(width: 8),
+                            SizedBox(
+                              width: 56,
+                              child: TextField(
+                                decoration: const InputDecoration(isDense: true),
+                                keyboardType: TextInputType.number,
+                                controller: TextEditingController(text: interval.toString()),
+                                onChanged: (v) {
+                                  final parsed = int.tryParse(v) ?? 1;
+                                  setState(() => interval = parsed.clamp(1, 365));
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(unit == 'weekly'
+                                ? 'week(s)'
+                                : unit == 'monthly'
+                                    ? 'month(s)'
+                                    : 'period(s)'),
+                          ],
+                        ),
+                      ],
+                      if (unit == 'weekly' || unit == 'custom') ...[
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 4,
+                          children: weekdayLabels.entries.map((e) {
+                            final selected = selectedWeekdays.contains(e.key);
+                            return FilterChip(
+                              label: Text(e.value),
+                              selected: selected,
+                              onSelected: (val) {
+                                setState(() {
+                                  if (val) {
+                                    selectedWeekdays.add(e.key);
+                                  } else {
+                                    selectedWeekdays.remove(e.key);
+                                  }
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Send reminder at this time'),
+                        value: remind,
+                        onChanged: (val) {
+                          setState(() => remind = val);
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      // If there are goals, let user pick one. If none, inform a "General" goal will be created.
+                      if (category.goals.isNotEmpty)
+                        DropdownButtonFormField<String>(
+                          value: chosenGoalId,
+                          items: category.goals.map((g) => DropdownMenuItem(value: g.id, child: Text(g.title))).toList(),
+                          onChanged: (v) => setState(() => chosenGoalId = v),
+                          decoration: const InputDecoration(labelText: 'Attach to goal'),
+                        )
+                      else
+                        const Text(
+                          'No goals in this category. A "General" goal will be created and the habit will be added there.',
+                          style: TextStyle(fontSize: 12),
+                        ),
                     ],
-                    const SizedBox(height: 8),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: const Text('Send reminder at this time'),
-                      value: remind,
-                      onChanged: (val) {
-                        setState(() => remind = val);
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    // If there are goals, let user pick one. If none, inform a "General" goal will be created.
-                    if (category.goals.isNotEmpty)
-                      DropdownButtonFormField<String>(
-                        value: chosenGoalId,
-                        items: category.goals.map((g) => DropdownMenuItem(value: g.id, child: Text(g.title))).toList(),
-                        onChanged: (v) => setState(() => chosenGoalId = v),
-                        decoration: const InputDecoration(labelText: 'Attach to goal'),
-                      )
-                    else
-                      const Text('No goals in this category. A "General" goal will be created and the habit will be added there.',
-                          style: TextStyle(fontSize: 12)),
-                  ],
+                  ),
                 ),
                 actions: [
                   TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
@@ -264,6 +269,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     final app = context.watch<AppProvider>();
     final category = app.categories.firstWhere((c) => c.id == widget.categoryId);
+    final sortedGoals = [...category.goals]..sort((a, b) => b.priority.compareTo(a.priority));
 
     return Scaffold(
       appBar: AppBar(
@@ -311,16 +317,33 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     ]),
                     const SizedBox(height: 8),
                     Expanded(
-                      child: category.goals.isEmpty
+                      child: sortedGoals.isEmpty
                           ? const Center(child: Text('No goals yet. Add one.', style: TextStyle(color: Colors.white70)))
                           : ListView.builder(
-                              itemCount: category.goals.length,
+                              itemCount: sortedGoals.length,
                               itemBuilder: (context, i) {
-                                final goal = category.goals[i];
+                                final goal = sortedGoals[i];
+                                final Color priorityColor;
+                                switch (goal.priority) {
+                                  case 3:
+                                    priorityColor = Colors.redAccent;
+                                    break;
+                                  case 1:
+                                    priorityColor = Colors.greenAccent;
+                                    break;
+                                  default:
+                                    priorityColor = Colors.amberAccent;
+                                }
                                 return Card(
                                   color: Colors.white10,
                                   margin: const EdgeInsets.symmetric(vertical: 8),
-                                  child: ExpansionTile(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(color: priorityColor, width: 4),
+                                      ),
+                                    ),
+                                    child: ExpansionTile(
                                     tilePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                     title: Text(goal.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                                     subtitle: Text('${goal.habits.length} habit(s)'),
@@ -358,6 +381,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             child: HabitTile(
                                               categoryId: category.id,
                                               goalId: goal.id,
+                                              goalPriority: goal.priority,
                                               habit: h,
                                             ),
                                           )),
@@ -376,7 +400,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       )
                                     ],
                                   ),
-                                );
+                                ));
                               },
                             ),
                     )

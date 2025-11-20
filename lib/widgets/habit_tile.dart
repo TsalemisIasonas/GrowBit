@@ -6,8 +6,9 @@ import '../providers/app_provider.dart';
 class HabitTile extends StatelessWidget {
   final String categoryId;
   final String goalId;
+  final int goalPriority;
   final Habit habit;
-  const HabitTile({super.key, required this.categoryId, required this.goalId, required this.habit});
+  const HabitTile({super.key, required this.categoryId, required this.goalId, required this.goalPriority, required this.habit});
 
   bool _isCompletedToday(Habit h) {
     final today = DateTime.now().toUtc();
@@ -20,7 +21,7 @@ class HabitTile extends StatelessWidget {
     final app = context.read<AppProvider>();
     final completed = _isCompletedToday(habit);
     final Color priorityColor = () {
-      switch (habit.priority) {
+      switch (goalPriority) {
         case 3:
           return Colors.redAccent;
         case 1:
@@ -31,11 +32,7 @@ class HabitTile extends StatelessWidget {
     }();
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 6),
-      leading: Container(
-        width: 6,
-        height: double.infinity,
-        color: priorityColor,
-      ),
+      leading: Icon(Icons.circle, color: priorityColor, size: 12),
       title: Text(habit.name),
       subtitle: Text('Streak: ${habit.streak}'),
       trailing: Wrap(spacing: 8, children: [
@@ -60,9 +57,11 @@ class HabitTile extends StatelessWidget {
                               const SizedBox(height: 8),
                               DropdownButton<int>(
                                 value: chosen,
-                                items: List.generate(5, (i) => i + 1)
-                                    .map((v) => DropdownMenuItem(value: v, child: Text(v.toString())))
-                                    .toList(),
+                                items: const [
+                                  DropdownMenuItem(value: 1, child: Text('1 (Low)')),
+                                  DropdownMenuItem(value: 2, child: Text('2 (Medium)')),
+                                  DropdownMenuItem(value: 3, child: Text('3 (High)')),
+                                ],
                                 onChanged: (v) {
                                   if (v == null) return;
                                   setState(() => chosen = v);

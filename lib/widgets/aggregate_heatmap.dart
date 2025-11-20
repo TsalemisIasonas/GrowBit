@@ -20,7 +20,7 @@ class AggregateHeatmap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final map = context.read<AppProvider>().aggregatedActivityMap(days: days);
+    final map = context.watch<AppProvider>().aggregatedActivityMap(days: days);
     final dates = List<String>.from(map.keys);
     dates.sort(); // oldest ... newest
     return LayoutBuilder(builder: (context, constraints) {
@@ -62,7 +62,7 @@ class AggregateHeatmap extends StatelessWidget {
                         bottom: 24,
                       ),
                       decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.black,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24),
@@ -126,7 +126,8 @@ class AggregateHeatmap extends StatelessWidget {
                 width: cellSize,
                 height: cellSize,
                 decoration: BoxDecoration(color: _colorForCount(count), borderRadius: BorderRadius.circular(4)),
-                child: count > 0 ? Center(child: Text('$count', style: const TextStyle(fontSize: 10, color: Colors.white70))) : const SizedBox.shrink(),
+                // No numeric count inside the square; color intensity alone indicates activity.
+                child: const SizedBox.shrink(),
               ),
             );
           }).toList(),
