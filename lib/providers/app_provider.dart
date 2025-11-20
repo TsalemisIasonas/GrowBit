@@ -13,6 +13,8 @@ class AppProvider extends ChangeNotifier {
   final _uuid = const Uuid();
 
   List<Category> categories = [];
+  List<Category> get activeCategories => categories.where((c) => !c.deleted).toList();
+  List<Category> get deletedCategories => categories.where((c) => c.deleted).toList();
 
   Future<void> load() async {
     final saved = await _storage.loadAll();
@@ -59,6 +61,20 @@ class AppProvider extends ChangeNotifier {
   }
 
   void deleteCategory(String categoryId) {
+    final c = categories.firstWhere((c) => c.id == categoryId);
+    c.deleted = true;
+    persist();
+    notifyListeners();
+  }
+
+  void restoreCategory(String categoryId) {
+    final c = categories.firstWhere((c) => c.id == categoryId);
+    c.deleted = false;
+    persist();
+    notifyListeners();
+  }
+
+  void permanentlyDeleteCategory(String categoryId) {
     categories.removeWhere((c) => c.id == categoryId);
     persist();
     notifyListeners();

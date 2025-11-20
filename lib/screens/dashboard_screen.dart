@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 import '../widgets/aggregate_heatmap.dart';
+import 'home_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -40,50 +41,16 @@ class DashboardScreen extends StatelessWidget {
         title: const Text('Dashboard'),
         backgroundColor: Colors.transparent,
         elevation: 0,
-      ),
-      drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            children: [
-              DrawerHeader(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Categories',
-                        style: TextStyle(fontSize: 20, color: Colors.tealAccent)),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: app.categories.length,
-                  itemBuilder: (context, i) {
-                    final c = app.categories[i];
-                    return ListTile(
-                      title: Text(c.title),
-                      subtitle: Text('${c.goals.length} goal(s)'),
-                      onTap: () {
-                        Navigator.pop(context); // close drawer
-                        Navigator.pushNamed(context, '/category',
-                            arguments: {'id': c.id});
-                      },
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: ElevatedButton.icon(
-                  onPressed: () => _showAddCategoryDialog(context),
-                  icon: const Icon(Icons.add),
-                  label: const Text('New Category'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.tealAccent),
-                ),
-              ),
-            ],
+        actions: [
+          IconButton(
+            tooltip: 'Add Category',
+            icon: const Icon(Icons.add_box_outlined),
+            onPressed: () => _showAddCategoryDialog(context),
           ),
-        ),
+        ],
+      ),
+      drawer: const Drawer(
+        child: AppCategoryDrawer(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

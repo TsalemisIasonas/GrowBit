@@ -5,6 +5,7 @@ import '../widgets/habit_tile.dart';
 import '../models/goal.dart';
 import '../models/habit.dart';
 import 'package:uuid/uuid.dart';
+import 'home_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = '/category';
@@ -290,19 +291,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ],
       ),
       drawer: const Drawer(
-        child: SafeArea(
-          child: HomeDrawerPlaceholder(),
-        ),
+        child: AppCategoryDrawer(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             // Goals list
-            Expanded(
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 200,
               child: Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: const Color.fromARGB(255, 58, 55, 55), borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(color: const Color.fromARGB(255, 16, 21, 30), borderRadius: BorderRadius.circular(12)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -414,14 +414,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        
-        foregroundColor: Colors.white,
-        shape: const CircleBorder(),
+                shape: const CircleBorder(),
         onPressed: () {
           Navigator.popUntil(context, ModalRoute.withName('/'));
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.home, size: 40),
+        backgroundColor: Colors.white,
+        child:  Icon(Icons.home, size: 36, color: Colors.black),
       ),
       bottomNavigationBar: const ClipRRect(
         borderRadius: BorderRadius.only(
@@ -431,13 +429,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: BottomAppBar(
           height: 70,
           color: Colors.white,
-          shape: const CircularNotchedRectangle(),
+          shape: CircularNotchedRectangle(),
           notchMargin: 6.0,
           child: SizedBox(
             height: 70,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
+              children: [
                 SizedBox(width: 32),
                 SizedBox(width: 48),
               ],
@@ -449,33 +447,4 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
-/// Minimal placeholder used in the Category drawer since the full drawer is implemented in HomeScreen.
-/// You can replace this with the real drawer widget if you prefer.
-class HomeDrawerPlaceholder extends StatelessWidget {
-  const HomeDrawerPlaceholder({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final app = context.watch<AppProvider>();
-    return Column(
-      children: [
-        const DrawerHeader(child: Text('Categories', style: TextStyle(fontSize: 20, color: Colors.tealAccent))),
-        Expanded(
-          child: ListView.builder(
-            itemCount: app.categories.length,
-            itemBuilder: (context, i) {
-              final c = app.categories[i];
-              return ListTile(
-                title: Text(c.title),
-                subtitle: Text('${c.goals.length} goal(s)'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, '/category', arguments: {'id': c.id});
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
+// Drawer UI is shared via AppCategoryDrawer from home_screen.dart

@@ -20,12 +20,61 @@ class AppCategoryDrawer extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: app.categories.length,
+              itemCount: app.activeCategories.length,
               itemBuilder: (context, i) {
-                final c = app.categories[i];
+                final c = app.activeCategories[i];
                 return ListTile(
                   title: Text(c.title),
                   subtitle: Text('${c.goals.length} goal(s)'),
+                  trailing: PopupMenuButton<String>(
+                    onSelected: (v) {
+                      if (v == 'edit') {
+                        final controller = TextEditingController(text: c.title);
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Edit Category'),
+                            content: TextField(controller: controller),
+                            actions: [
+                              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                              TextButton(
+                                onPressed: () {
+                                  final v = controller.text.trim();
+                                  if (v.isNotEmpty) {
+                                    context.read<AppProvider>().editCategory(c.id, v);
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Save'),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (v == 'delete') {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Delete Category?'),
+                            content: Text('Move "${c.title}" to bin?'),
+                            actions: [
+                              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                              TextButton(
+                                onPressed: () {
+                                  context.read<AppProvider>().deleteCategory(c.id);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Move to bin'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                    itemBuilder: (_) => const [
+                      PopupMenuItem(value: 'edit', child: Text('Edit')),
+                      PopupMenuItem(value: 'delete', child: Text('Delete')),
+                    ],
+                  ),
                   onTap: () {
                     Navigator.pop(context); // close drawer
                     Navigator.pushNamed(context, '/category', arguments: {'id': c.id});
@@ -33,6 +82,14 @@ class AppCategoryDrawer extends StatelessWidget {
                 );
               },
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete_outline),
+            title: const Text('Bin'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/bin');
+            },
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/app_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/category_screen.dart';
+import 'screens/bin_screen.dart';
 import 'services/notification_service.dart';
 
 void main() async {
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (_) => const _RootShell(),
+          BinScreen.routeName: (_) => const BinScreen(),
         },
         onGenerateRoute: (settings) {
           if (settings.name == CategoryScreen.routeName) {
@@ -49,6 +51,6 @@ class _RootShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DashboardScreen();
+    return DashboardScreen();
   }
 }
