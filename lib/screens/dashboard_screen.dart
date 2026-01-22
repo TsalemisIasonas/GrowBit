@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 import '../widgets/aggregate_heatmap.dart';
-import 'home_screen.dart';
+import '../widgets/app_category_drawer.dart'; 
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -52,33 +52,34 @@ class DashboardScreen extends StatelessWidget {
       drawer: const Drawer(
         child: AppCategoryDrawer(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 300,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 83, 82, 82),
-                  borderRadius: BorderRadius.circular(12)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Activity Heatmap (all habits)',
-                    style: TextStyle(
-                        fontSize: 18, color: Colors.tealAccent),
-                  ),
-                  SizedBox(height: 8),
-                  Expanded(child: AggregateHeatmap(days: 90)),
-                ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 300,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 83, 82, 82),
+                    borderRadius: BorderRadius.circular(12)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Activity Heatmap (all habits)',
+                      style: TextStyle(
+                          fontSize: 18, color: Colors.tealAccent),
+                    ),
+                    SizedBox(height: 8),
+                    Expanded(child: AggregateHeatmap(days: 90)),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-            Expanded(
-              child: Container(
+              const SizedBox(height: 32),
+              Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.white10,
@@ -98,54 +99,54 @@ class DashboardScreen extends StatelessWidget {
                         style: TextStyle(color: Colors.white70),
                       )
                     else
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: todayHabits.length,
-                          itemBuilder: (context, index) {
-                            final r = todayHabits[index];
-                            return ListTile(
-                              dense: true,
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(r['habitName']),
-                              subtitle: Text('${r['goalTitle']} · ${r['categoryTitle']}'),
-                              trailing: Wrap(
-                                spacing: 4,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.check_circle_outline, color: Colors.tealAccent),
-                                    onPressed: () async {
-                                      await app.recordHabitCompletion(
-                                        r['categoryId'] as String,
-                                        r['goalId'] as String,
-                                        r['habitId'] as String,
-                                        note: 'Completed from dashboard',
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, color: Colors.white70),
-                                    onPressed: () {
-                                      _showEditHabitDialog(
-                                        context,
-                                        app,
-                                        r['categoryId'] as String,
-                                        r['goalId'] as String,
-                                        r['habitId'] as String,
-                                        r['habitName'] as String,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: todayHabits.length,
+                        itemBuilder: (context, index) {
+                              final r = todayHabits[index];
+                              return ListTile(
+                                dense: true,
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(r['habitName']),
+                                subtitle: Text('${r['goalTitle']} · ${r['categoryTitle']}'),
+                                trailing: Wrap(
+                                  spacing: 4,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.check_circle_outline, color: Colors.tealAccent),
+                                      onPressed: () async {
+                                        await app.recordHabitCompletion(
+                                          r['categoryId'] as String,
+                                          r['goalId'] as String,
+                                          r['habitId'] as String,
+                                          note: 'Completed from dashboard',
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.white70),
+                                      onPressed: () {
+                                        _showEditHabitDialog(
+                                          context,
+                                          app,
+                                          r['categoryId'] as String,
+                                          r['goalId'] as String,
+                                          r['habitId'] as String,
+                                          r['habitName'] as String,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

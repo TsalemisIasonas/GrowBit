@@ -5,7 +5,7 @@ import '../widgets/habit_tile.dart';
 import '../models/goal.dart';
 import '../models/habit.dart';
 import 'package:uuid/uuid.dart';
-import 'home_screen.dart';
+import '../widgets/app_category_drawer.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = '/category';
@@ -273,6 +273,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final sortedGoals = [...category.goals]..sort((a, b) => b.priority.compareTo(a.priority));
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(category.title),
         backgroundColor: Colors.transparent,
@@ -298,8 +299,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: Column(
           children: [
             // Goals list
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 200,
+            Expanded(
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(color: const Color.fromARGB(255, 16, 21, 30), borderRadius: BorderRadius.circular(12)),
@@ -320,96 +320,97 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: sortedGoals.isEmpty
                           ? const Center(child: Text('No goals yet. Add one.', style: TextStyle(color: Colors.white70)))
                           : ListView.builder(
-                              itemCount: sortedGoals.length,
-                              itemBuilder: (context, i) {
-                                final goal = sortedGoals[i];
-                                final Color priorityColor;
-                                switch (goal.priority) {
-                                  case 3:
-                                    priorityColor = Colors.redAccent;
-                                    break;
-                                  case 1:
-                                    priorityColor = Colors.greenAccent;
-                                    break;
-                                  default:
-                                    priorityColor = Colors.amberAccent;
-                                }
-                                return Card(
-                                  color: Colors.white10,
-                                  margin: const EdgeInsets.symmetric(vertical: 8),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        left: BorderSide(color: priorityColor, width: 4),
+                                itemCount: sortedGoals.length,
+                                itemBuilder: (context, i) {
+                                  final goal = sortedGoals[i];
+                                  final Color priorityColor;
+                                  switch (goal.priority) {
+                                    case 3:
+                                      priorityColor = Colors.redAccent;
+                                      break;
+                                    case 1:
+                                      priorityColor = Colors.greenAccent;
+                                      break;
+                                    default:
+                                      priorityColor = Colors.amberAccent;
+                                  }
+                                  return Card(
+                                    color: Colors.white10,
+                                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                                    margin: const EdgeInsets.symmetric(vertical: 8),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          left: BorderSide(color: priorityColor.withOpacity(0.3), width: 4),
+                                        ),
                                       ),
-                                    ),
-                                    child: ExpansionTile(
-                                    tilePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                    title: Text(goal.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    subtitle: Text('${goal.habits.length} habit(s)'),
-                                    trailing: PopupMenuButton<String>(
-                                      onSelected: (v) {
-                                        if (v == 'edit') _showEditGoalDialog(context, category.id, goal);
-                                        if (v == 'delete') {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => AlertDialog(
-                                                    title: const Text('Delete Goal?'),
-                                                    content: Text('Delete "${goal.title}" and its habits?'),
-                                                    actions: [
-                                                      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-                                                      TextButton(
-                                                          onPressed: () {
-                                                            context.read<AppProvider>().deleteGoal(category.id, goal.id);
-                                                            Navigator.pop(context);
-                                                          },
-                                                          child: const Text('Delete'))
-                                                    ],
-                                                  ));
-                                        }
-                                      },
-                                      itemBuilder: (_) => const [
-                                        PopupMenuItem(value: 'edit', child: Text('Edit')),
-                                        PopupMenuItem(value: 'delete', child: Text('Delete')),
+                                      child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                      title: Text(goal.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      subtitle: Text('${goal.habits.length} habit(s)'),
+                                      trailing: PopupMenuButton<String>(
+                                        onSelected: (v) {
+                                          if (v == 'edit') _showEditGoalDialog(context, category.id, goal);
+                                          if (v == 'delete') {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) => AlertDialog(
+                                                      title: const Text('Delete Goal?'),
+                                                      content: Text('Delete "${goal.title}" and its habits?'),
+                                                      actions: [
+                                                        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              context.read<AppProvider>().deleteGoal(category.id, goal.id);
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: const Text('Delete'))
+                                                      ],
+                                                    ));
+                                          }
+                                        },
+                                        itemBuilder: (_) => const [
+                                          PopupMenuItem(value: 'edit', child: Text('Edit')),
+                                          PopupMenuItem(value: 'delete', child: Text('Delete')),
+                                        ],
+                                      ),
+                                      children: [
+                                        if (goal.habits.isEmpty)
+                                          const ListTile(title: Text('No habits yet. Add one below.', style: TextStyle(color: Colors.white60))),
+                                        ...goal.habits.map((h) => Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                              child: HabitTile(
+                                                categoryId: category.id,
+                                                goalId: goal.id,
+                                                goalPriority: goal.priority,
+                                                habit: h,
+                                              ),
+                                            )),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+                                          child: Row(
+                                            children: [
+                                              ElevatedButton.icon(
+                                                onPressed: () => _showAddHabitDialog(context, category.id, preselectedGoalId: goal.id),
+                                                icon: const Icon(Icons.add, color: Colors.black),
+                                                label: const Text('Add Habit', style: TextStyle(color: Colors.black)),
+                                                style: ElevatedButton.styleFrom(backgroundColor: Colors.tealAccent),
+                                              ),
+                                            ],
+                                          ),
+                                        )
                                       ],
                                     ),
-                                    children: [
-                                      if (goal.habits.isEmpty)
-                                        const ListTile(title: Text('No habits yet. Add one below.', style: TextStyle(color: Colors.white60))),
-                                      ...goal.habits.map((h) => Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                            child: HabitTile(
-                                              categoryId: category.id,
-                                              goalId: goal.id,
-                                              goalPriority: goal.priority,
-                                              habit: h,
-                                            ),
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-                                        child: Row(
-                                          children: [
-                                            ElevatedButton.icon(
-                                              onPressed: () => _showAddHabitDialog(context, category.id, preselectedGoalId: goal.id),
-                                              icon: const Icon(Icons.add, color: Colors.black),
-                                              label: const Text('Add Habit', style: TextStyle(color: Colors.black)),
-                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.tealAccent),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ));
-                              },
-                            ),
-                    )
-                  ],
+                                  ));
+                                },
+                              ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
       ),
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -427,12 +428,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
           topRight: Radius.circular(24),
         ),
         child: BottomAppBar(
-          height: 70,
-          color: Colors.white,
+          height: 50,
+          color: Color.fromARGB(255, 168, 168, 168),
           shape: CircularNotchedRectangle(),
           notchMargin: 6.0,
           child: SizedBox(
-            height: 70,
+            height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

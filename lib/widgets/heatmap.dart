@@ -27,7 +27,7 @@ class HeatmapWidget extends StatelessWidget {
     final dates = List<String>.from(map.keys);
     dates.sort(); // oldest ... newest
     // Show as grid with 7 columns per week (like GitHub)
-    final rows = (dates.length / 7).ceil();
+    //final rows = (dates.length / 7).ceil();
     return LayoutBuilder(builder: (context, constraints) {
       final cellSize = (constraints.maxWidth - 16) / 14; // allow scrolling; modest size
       return SingleChildScrollView(
@@ -42,7 +42,7 @@ class HeatmapWidget extends StatelessWidget {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: const Color(0xFFF5F5F5),
                   builder: (_) {
                     final date = DateTime.parse(d);
                     return AnimatedContainer(
@@ -50,7 +50,7 @@ class HeatmapWidget extends StatelessWidget {
                       curve: Curves.easeOut,
                       padding: const EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 24),
                       decoration: const BoxDecoration(
-                        color: Colors.white,
+                        color: Color(0xFFF5F5F5),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(24),
                           topRight: Radius.circular(24),
@@ -68,7 +68,7 @@ class HeatmapWidget extends StatelessWidget {
                                 height: 4,
                                 margin: const EdgeInsets.only(bottom: 12),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade400,
+                                  color: Colors.grey[300],
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                               ),
@@ -114,7 +114,7 @@ class HeatmapWidget extends StatelessWidget {
                 decoration: BoxDecoration(color: _colorForCount(count), borderRadius: BorderRadius.circular(4)),
                 child: count > 0
                     ? Center(
-                        child: Text('$count', style: const TextStyle(fontSize: 10, color: Colors.white70)),
+                        child: Text('$count', style: const TextStyle(fontSize: 10, color: Colors.red)),
                       )
                     : const SizedBox.shrink(),
               ),
