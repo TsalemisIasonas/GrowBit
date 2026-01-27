@@ -277,19 +277,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
       appBar: AppBar(
         title: Text(category.title),
         backgroundColor: Colors.transparent,
-        actions: [
-          // Top-level Add Habit for the category — automatically attaches to the category (chooses a goal or creates General)
-          IconButton(
-            tooltip: 'Add habit to this category',
-            onPressed: () => _showAddHabitDialog(context, category.id),
-            icon: const Icon(Icons.add_circle_outline),
-          ),
-          IconButton(
-            tooltip: 'Add Goal',
-            onPressed: () => _showAddGoalDialog(context, category.id),
-            icon: const Icon(Icons.add_box),
-          ),
-        ],
+        // actions: [
+        //   // Top-level Add Habit for the category — automatically attaches to the category (chooses a goal or creates General)
+        //   IconButton(
+        //     tooltip: 'Add habit to this category',
+        //     onPressed: () => _showAddHabitDialog(context, category.id),
+        //     icon: const Icon(Icons.add_circle_outline),
+        //   ),
+        //   IconButton(
+        //     tooltip: 'Add Goal',
+        //     onPressed: () => _showAddGoalDialog(context, category.id),
+        //     icon: const Icon(Icons.add_box),
+        //   ),
+        // ],
       ),
       drawer: const Drawer(
         child: AppCategoryDrawer(),
@@ -415,30 +415,39 @@ class _CategoryScreenState extends State<CategoryScreen> {
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-                shape: const CircleBorder(),
-        onPressed: () {
-          Navigator.popUntil(context, ModalRoute.withName('/'));
-        },
-        backgroundColor: Colors.white,
-        child:  Icon(Icons.home, size: 36, color: Colors.black),
+        shape: const CircleBorder(),
+        onPressed: () => _showAddHabitDialog(context, category.id),
+        backgroundColor: const Color(0xFF64FFDA),
+        child: const Icon(Icons.add, size: 36, color: Colors.black),
       ),
-      bottomNavigationBar: const ClipRRect(
-        borderRadius: BorderRadius.only(
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
         child: BottomAppBar(
-          height: 50,
-          color: Color.fromARGB(255, 168, 168, 168),
-          shape: CircularNotchedRectangle(),
+          height: 60,
+          color: const Color.fromARGB(255, 168, 168, 168),
+          shape: const CircularNotchedRectangle(),
           notchMargin: 6.0,
           child: SizedBox(
-            height: 50,
+            height: 60,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                SizedBox(width: 32),
-                SizedBox(width: 48),
+                IconButton(
+                  icon: const Icon(Icons.home, color: Colors.black),
+                  onPressed: () {
+                    Navigator.popUntil(context, ModalRoute.withName('/'));
+                  },
+                ),
+                const SizedBox(width: 48),
+                IconButton(
+                  icon: const Icon(Icons.bar_chart, color: Colors.black),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/stats');
+                  },
+                ),
               ],
             ),
           ),

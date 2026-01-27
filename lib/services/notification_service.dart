@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 
 // Add this import near top of file to support tz use
 import 'package:timezone/timezone.dart' as tz;
@@ -19,6 +20,15 @@ class NotificationService {
     const settings = InitializationSettings(android: android, iOS: ios);
     await _plugin.initialize(settings);
   }
+  
+  Future<bool> _requestExactAlarmPermission() async {
+    final androidImplementation = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    if (androidImplementation != null) {
+      final bool? granted = await androidImplementation.requestExactAlarmsPermission();
+      return granted ?? false;
+    }
+    return true; // Non-Android or permission not needed
+  }
 
   Future<void> showSuggestionNotification({required String title, required String body}) async {
     const android = AndroidNotificationDetails('suggestions', 'Suggestions', importance: Importance.high);
@@ -33,6 +43,15 @@ class NotificationService {
     required String frequency, // 'daily', 'weekly', 'monthly', 'custom'
     List<int>? weekdays, // for 'custom' weekly patterns, 1=Mon..7=Sun
   }) async {
+    // Request permission on Android when user actually tries to set a reminder
+    if (Platform.isAndroid) {
+      final granted = await _requestExactAlarmPermission();
+      if (!granted) {
+        print('Exact alarms permission not granted - cannot schedule reminder');
+        return; // Don't schedule if permission denied
+      }
+    }
+
     await _ensureTz();
 
     final now = DateTime.now();
@@ -57,7 +76,7 @@ class NotificationService {
           android: AndroidNotificationDetails('reminders', 'Reminders', importance: Importance.defaultImportance),
           iOS: DarwinNotificationDetails(),
         ),
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
       );
@@ -81,7 +100,7 @@ class NotificationService {
           android: AndroidNotificationDetails('reminders', 'Reminders', importance: Importance.defaultImportance),
           iOS: DarwinNotificationDetails(),
         ),
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
@@ -103,7 +122,7 @@ class NotificationService {
           android: AndroidNotificationDetails('reminders', 'Reminders', importance: Importance.defaultImportance),
           iOS: DarwinNotificationDetails(),
         ),
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         // No built-in monthly component; this fires once. In a real app, you'd reschedule on each fire.
       );
@@ -126,30 +145,16 @@ class NotificationService {
           android: AndroidNotificationDetails('reminders', 'Reminders', importance: Importance.defaultImportance),
           iOS: DarwinNotificationDetails(),
         ),
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         // No direct multi-weekdays; as with monthly, you'd normally manage repeats yourself.
       );
       return;
     }
   }
-}
 
-
-extension on NotificationService {
   Future<void> _ensureTz() async {
     tzdata.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
-  }
-
-  Future<void> _zonedInit() async {
-    await _ensureTz();
-  }
-}
-
-// Ensure timezone is initialized in init
-extension InitWithTz on NotificationService {
-  Future<void> _initWithTz() async {
-    tzdata.initializeTimeZones();
   }
 }

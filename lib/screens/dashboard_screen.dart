@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:goals_app/screens/category_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 import '../widgets/aggregate_heatmap.dart';
@@ -46,6 +47,13 @@ class DashboardScreen extends StatelessWidget {
             tooltip: 'Add Category',
             icon: const Icon(Icons.add_box_outlined),
             onPressed: () => _showAddCategoryDialog(context),
+          ),
+          IconButton(
+            tooltip: 'Statistics',
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/stats');
+            },
           ),
         ],
       ),
@@ -110,6 +118,13 @@ class DashboardScreen extends StatelessWidget {
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(r['habitName']),
                                 subtitle: Text('${r['goalTitle']} · ${r['categoryTitle']}'),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    CategoryScreen.routeName,
+                                    arguments: {'id': r['categoryId']},
+                                  );
+                                },
                                 trailing: Wrap(
                                   spacing: 4,
                                   children: [
