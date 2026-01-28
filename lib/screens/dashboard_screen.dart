@@ -3,32 +3,89 @@ import 'package:goals_app/screens/category_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 import '../widgets/aggregate_heatmap.dart';
-import '../widgets/app_category_drawer.dart'; 
+import '../widgets/app_category_drawer.dart';
+import '../widgets/icon_picker_dialog.dart'; 
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   Future<void> _showAddCategoryDialog(BuildContext context) async {
     final controller = TextEditingController();
+    IconData? selectedIcon;
+    
     await showDialog(
         context: context,
         builder: (_) {
-          return AlertDialog(
-            title: const Text('Add Category'),
-            content: TextField(controller: controller, decoration: const InputDecoration(hintText: 'Category name')),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-              TextButton(
-                onPressed: () {
-                  final v = controller.text.trim();
-                  if (v.isNotEmpty) {
-                    context.read<AppProvider>().addCategory(v);
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              )
-            ],
+          return StatefulBuilder(
+            builder: (context, setState) => AlertDialog(
+              title: const Text('Add Category'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(hintText: 'Category name'),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Text('Icon: '),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () async {
+                          final icon = await showDialog<IconData>(
+                            context: context,
+                            builder: (_) => const IconPickerDialog(),
+                          );
+                          if (icon != null) {
+                            setState(() {
+                              selectedIcon = icon;
+                            });
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white10,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.tealAccent),
+                          ),
+                          child: Icon(
+                            selectedIcon ?? Icons.category,
+                            color: Colors.tealAccent,
+                            size: 32,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Tap to choose',
+                        style: TextStyle(fontSize: 12, color: Colors.white60),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final v = controller.text.trim();
+                    if (v.isNotEmpty) {
+                      context.read<AppProvider>().addCategory(
+                        v,
+                        iconCodePoint: selectedIcon?.codePoint,
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Add'),
+                ),
+              ],
+            ),
           );
         });
   }
@@ -203,7 +260,8 @@ class DashboardScreen extends StatelessWidget {
     final now = DateTime.now();
     final todayKey = '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-    for (final c in app.categories) {
+    // Only show habits from active (non-deleted) categories
+    for (final c in app.activeCategories) {
       for (final g in c.goals) {
         for (final h in g.habits) {
           bool due = false;

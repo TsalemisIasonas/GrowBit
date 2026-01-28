@@ -275,7 +275,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(category.title),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (category.icon != null) ...[
+              Icon(category.icon, color: Colors.tealAccent),
+              const SizedBox(width: 8),
+            ],
+            Text(category.title),
+          ],
+        ),
         backgroundColor: Colors.transparent,
         // actions: [
         //   // Top-level Add Habit for the category — automatically attaches to the category (chooses a goal or creates General)

@@ -20,22 +20,8 @@ class AppProvider extends ChangeNotifier {
     if (saved.isNotEmpty) {
       categories = saved;
     } else {
-      // Seed demo data with new structure
-      categories = [
-        Category(id: 'cat_health', title: 'Health', goals: [
-          Goal(id: 'g1', title: 'Improve my physical condition', habits: [
-            Habit(id: 'h1', name: 'Run 20 minutes'),
-            Habit(id: 'h2', name: 'Stretching'),
-          ]),
-        ]),
-        Category(id: 'cat_productivity', title: 'Productivity', goals: [
-          Goal(id: 'g2', title: 'Ship features weekly', habits: [
-            Habit(id: 'h3', name: 'Plan day'),
-            Habit(id: 'h4', name: 'Deep work 90m'),
-          ]),
-        ]),
-      ];
-      await persist();
+      // Start with empty categories - user creates their own
+      categories = [];
     }
     notifyListeners();
   }
@@ -45,16 +31,19 @@ class AppProvider extends ChangeNotifier {
   }
 
   // Category CRUD
-  void addCategory(String title) {
-    final c = Category(id: _uuid.v4(), title: title);
+  void addCategory(String title, {int? iconCodePoint}) {
+    final c = Category(id: _uuid.v4(), title: title, iconCodePoint: iconCodePoint);
     categories.add(c);
     persist();
     notifyListeners();
   }
 
-  void editCategory(String categoryId, String newTitle) {
+  void editCategory(String categoryId, String newTitle, {int? iconCodePoint}) {
     final c = categories.firstWhere((e) => e.id == categoryId);
     c.title = newTitle;
+    if (iconCodePoint != null) {
+      c.iconCodePoint = iconCodePoint;
+    }
     persist();
     notifyListeners();
   }
@@ -322,6 +311,32 @@ class AppProvider extends ChangeNotifier {
     required String frequency,
     List<int>? weekdays,
   }) async {
-    await NotificationService().scheduleReminder(habitId, time, frequency: frequency, weekdays: weekdays);
+    // Find the habit to get its name and goal title
+    String? habitName;
+    String? goalTitle;
+    
+    for (final category in categories) {
+      for (final goal in category.goals) {
+        final habit = goal.habits.firstWhere(
+          (h) => h.id == habitId,
+          orElse: () => goal.habits.first, // fallback
+        );
+        if (habit.id == habitId) {
+          habitName = habit.name;
+          goalTitle = goal.title;
+          break;
+        }
+      }
+      if (habitName != null) break;
+    }
+    
+    await NotificationService().scheduleReminder(
+      habitId,
+      time,
+      frequency: frequency,
+      weekdays: weekdays,
+      habitName: habitName,
+      goalTitle: goalTitle,
+    );
   }
 }

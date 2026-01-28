@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:goals_app/providers/app_provider.dart';
 import 'package:provider/provider.dart';
+import 'icon_picker_dialog.dart';
 
 class AppCategoryDrawer extends StatelessWidget {
   const AppCategoryDrawer({super.key});
@@ -75,6 +76,10 @@ class AppCategoryDrawer extends StatelessWidget {
                   itemBuilder: (context, i) {
                     final c = app.activeCategories[i];
                     return ListTile(
+                      leading: Icon(
+                        c.icon ?? Icons.category,
+                        color: Colors.tealAccent,
+                      ),
                       title: Text(c.title),
                       subtitle: Text('${c.goals.length} goal(s)'),
                       trailing: Row(
@@ -83,32 +88,7 @@ class AppCategoryDrawer extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.white),
                             onPressed: () {
-                              final controller =
-                                  TextEditingController(text: c.title);
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: const Text('Edit Category'),
-                                  content: TextField(controller: controller),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('Cancel')),
-                                    TextButton(
-                                      onPressed: () {
-                                        final v = controller.text.trim();
-                                        if (v.isNotEmpty) {
-                                          context
-                                              .read<AppProvider>()
-                                              .editCategory(c.id, v);
-                                        }
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Save'),
-                                    ),
-                                  ],
-                                ),
-                              );
+                              _showEditCategoryDialog(context, app, c);
                             },
                           ),
                           IconButton(
@@ -162,6 +142,84 @@ class AppCategoryDrawer extends StatelessWidget {
         
       ),
       
+    );
+  }
+
+  void _showEditCategoryDialog(BuildContext context, AppProvider app, dynamic category) {
+    final controller = TextEditingController(text: category.title);
+    IconData? selectedIcon = category.icon;
+
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Edit Category'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller,
+                decoration: const InputDecoration(labelText: 'Category Name'),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const Text('Icon: '),
+                  const SizedBox(width: 8),
+                  InkWell(
+                    onTap: () async {
+                      final icon = await showDialog<IconData>(
+                        context: context,
+                        builder: (_) => const IconPickerDialog(),
+                      );
+                      if (icon != null) {
+                        setState(() {
+                          selectedIcon = icon;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white10,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.tealAccent),
+                      ),
+                      child: Icon(
+                        selectedIcon ?? Icons.category,
+                        color: Colors.tealAccent,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('Tap to change', style: TextStyle(fontSize: 12, color: Colors.white60)),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final v = controller.text.trim();
+                if (v.isNotEmpty) {
+                  app.editCategory(
+                    category.id,
+                    v,
+                    iconCodePoint: selectedIcon?.codePoint,
+                  );
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
